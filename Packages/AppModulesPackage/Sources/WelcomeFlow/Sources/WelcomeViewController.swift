@@ -1,7 +1,6 @@
 //  Copyright © 2021 My organization. All rights reserved.
 
 import UIKit
-import SnapKit
 import AppDesignSystem
 import AppBaseFlow
 

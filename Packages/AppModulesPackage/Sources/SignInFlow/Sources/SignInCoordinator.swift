@@ -11,7 +11,7 @@ public final class SignInCoordinator: EventCoordinator {
 
     public enum SignInEvent {
         case exit
-        case finish
+        case finish(AuthState)
     }
 
     public var events: AnyPublisher<SignInEvent, Never> {
@@ -25,14 +25,13 @@ public final class SignInCoordinator: EventCoordinator {
     private var eventSubject: PassthroughSubject<Event, Never> = .init()
 
 //    private let signInInteractor: SignInInteractor
-//    private let authService: AuthService
+    @Injected(\.authService) private var authService: AuthService
     private var designSystem = appDesignSystem
 
     private weak var navigationController: UINavigationController?
 
     public init(navigationController: UINavigationController) {
         self.navigationController = navigationController
-//        self.authService = authService
 //        self.signInInteractor = SignInInteractor(authService: authService)
     }
 
