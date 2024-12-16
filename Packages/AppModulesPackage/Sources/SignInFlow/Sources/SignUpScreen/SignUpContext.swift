@@ -43,7 +43,7 @@ extension SignUpContext {
 
 //MARK: SignIn Provider
 
-extension SignUpProviderContext {
+extension SignUpContext {
     enum Provider {
         case pwd
         case apple

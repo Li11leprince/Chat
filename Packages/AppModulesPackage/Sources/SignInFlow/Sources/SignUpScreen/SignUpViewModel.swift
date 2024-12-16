@@ -12,6 +12,6 @@ final class SignUpViewModel: BaseViewModel<SignUpContext.ViewEvent,
     }
     
     override func onViewEvent(_ event: ViewEvent) {
-        <#code#>
+        print("f")
     }
 }

@@ -9,7 +9,8 @@ final class AppDelegate: UIResponder, UIApplicationDelegate {
 
     private static var logger = LoggerFactory.default
 
-    private let appCoordinator = AppContainer.provideAppCoordinator()
+    @Injected(\.appCoordinator) private var appCoordinator
+    @Injected(\.env) private var env
 
     func application(
         _ application: UIApplication,
@@ -25,7 +26,6 @@ final class AppDelegate: UIResponder, UIApplicationDelegate {
     }
 
     private func initializeStartupServices() {
-        ImageLoadingHelper.enableWebPCoder()
         KeyboardHealper.firstEnableKeyboardManager()
     }
 }
@@ -34,7 +34,7 @@ private extension AppDelegate {
 
     private func logApplicationStartedEvent() {
         Self.logger.info(
-            message: "Application started! Environment: \(AppContainer.provideEnv())"
+            message: "Application started! Environment: \(env.description)"
         )
     }
 }

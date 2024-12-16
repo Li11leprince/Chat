@@ -7,6 +7,8 @@ import Utilities
 import AppEntities
 import AppServices
 import AppBaseFlow
+import SignInFlow
+import HomeFlow
 
 final class AppCoordinator: BaseCoordinator, Coordinator {
 
@@ -27,7 +29,7 @@ final class AppCoordinator: BaseCoordinator, Coordinator {
         if authService.isLoggedIn() {
             startAuthorizedFlow()
         } else {
-            startWelcomeFlow()
+            startSignInFlow()
         }
     }
 
@@ -46,20 +48,6 @@ private extension AppCoordinator {
 
     private func startAuthorizedFlow() {
 
-    }
-
-    private func startWelcomeFlow() {
-        let coordinator = WelcomeCoordinator(
-            navigationController: navigationController
-        )
-        let token = coordinator.events.sink { [weak self] event in
-            guard let self = self else { return }
-            switch event {
-            case .signIn: self.startSignInFlow()
-            }
-        }
-        addDependency(coordinator, token: token)
-        coordinator.start()
     }
 
     private func startSignInFlow() {

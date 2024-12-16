@@ -27,9 +27,6 @@ struct AppContainer {
 private struct EnvKey: InjectionKey {
     static var currentValue: Env = Env(debugStorage: AppContainer.debugStorage)
 }
-private struct AppCoordinatorKey: InjectionKey {
-    static var currentValue: Coordinator = AppCoordinator()
-}
 
 private struct MemoryStorageKey: InjectionKey {
     static var currentValue: MemoryStorage = .init()
@@ -87,15 +84,10 @@ private struct AuthServiceKey: InjectionKey {
 }
 
 //MARK: Dependecy Paths
-extension InjectedValues {
+public extension InjectedValues {
     var env: Env {
         get { Self[EnvKey.self] }
         set { Self[EnvKey.self] = newValue }
-    }
-    
-    var networkProvider: Coordinator {
-        get { Self[AppCoordinatorKey.self] }
-        set { Self[AppCoordinatorKey.self] = newValue }
     }
     
     var memoryStorage: MemoryStorage {
