@@ -17,6 +17,7 @@
 "common_confirmation" = "Confirmation";
 "common_done" = "Done";
 "common_use_open_settings" = "Open Settings";
+"common_or" = "Or";
 
 // Common Errors
 "common_error" = "Error";
@@ -32,12 +33,12 @@
 
 
 // SignIn Feature Strings
-"sign_in_we_sent_code_to" = "We sent a code to %@";
-"sign_in_phone_content_title" = "Sign in with your phone number";
-"sign_in_phone_caption" = "Message and data rates apply";
-"sign_in_verify_content_title" = "Verify phone number";
-"sign_in_verify_placeholder" = "Verification code";
-"sign_in_resent_button_active" = "Resend code";
+"sign_in_connect_friends" = "Connect friends";
+"sign_in_easily_quickly" = "easily & quickly";
+"sign_in_our_chat_is_perfect_way" = "Our chat app is the perfect way to stay connected with friends and family.";
+"sign_in_sign_up_with_mail" = "Sign up with mail";
+"sign_in_existing_account" = "Existing account?";
+"sign_in_log_in" = "Log in";
 "sign_in_resent_button_disable" = "Resend code in %@";
 "sign_in_error_sms_code_is_invalid" = "You've entered the wrong code. Please try again";
 "sign_in_error_sms_code_expired" = "Your session has expired. Please tap resend code";

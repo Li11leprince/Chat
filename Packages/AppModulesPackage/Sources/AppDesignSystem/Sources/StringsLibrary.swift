@@ -35,6 +35,7 @@ extension StringsLibrary {
     public var commonConfirmation: String { localized("common_confirmation") }
     public var commonDone: String { localized("common_done") }
     public var commonOpenSettings: String { localized("common_use_open_settings") }
+    public var commonOr: String { localized("common_or") }
 
     // MARK: - Common Errors
 
@@ -84,4 +85,10 @@ extension StringsLibrary {
             arg: seconds
         )
     }
+    public var signUpWithMail: String { localized("sign_in_sign_up_with_mail") }
+    public var signInOurChatAppIsPerfect: String { localized("sign_in_our_chat_is_perfect_way") }
+    public var signInConnectFriends: String { localized("sign_in_connect_friends") }
+    public var signInEasyAndQuickly: String { localized("sign_in_easily_quickly") }
+    public var signInExistingAccount: String { localized("sign_in_existing_account") }
+    public var signInLogIn: String { localized("sign_in_log_in") }
 }

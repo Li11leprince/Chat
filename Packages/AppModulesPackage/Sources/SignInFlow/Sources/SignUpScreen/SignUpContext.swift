@@ -14,9 +14,9 @@ struct SignUpContext {
 extension SignUpContext {
     
     enum ViewState: Stubable {
-        case empty
+        case initial
         
-        static var stub: ViewState { .empty }
+        static var stub: ViewState { .initial }
     }
 }
 
@@ -29,11 +29,13 @@ extension SignUpContext {
     }
 }
 
-//MARK: View Invent
+//MARK: ViewEvent
 
 extension SignUpContext {
     enum ViewEvent {
-        
+        case viewDidLoad
+        case signUpWithEmailPressed
+        case loginPressed
     }
 }
 

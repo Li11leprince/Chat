@@ -84,8 +84,12 @@ extension Components {
         return actionButton
     }
 
-    public var textButton: ActionButton {
-        let style = TextButtonStyle(colors: colors, typography: typography)
+    public func textButton(textColor: UIColor, disabledTextColor: UIColor? = nil) -> ActionButton {
+        let style = TextButtonStyle(
+            textColor: textColor,
+            disabledTextColor: disabledTextColor == nil ? textColor : disabledTextColor!,
+            typography: typography
+        )
 
         let textButton = ActionButton(type: .system)
         textButton.set(style: style)
@@ -128,6 +132,24 @@ extension Components {
 
         return button
     }
+    
+    public var roundedNoDisabledButton: ActionButton {
+        let style = RoundedNoDisabledStyle(colors: colors, cornerRadius: 16)
+
+        let button = ActionButton(type: .system)
+        button.set(style: style)
+
+        return button
+    }
+    
+    public var roundedWithDisabledButton: ActionButton {
+        let style = RoundedWithDisabledStyle(colors: colors, cornerRadius: 16)
+
+        let button = ActionButton(type: .system)
+        button.set(style: style)
+
+        return button
+    }
 
     public var roundedImageView: RoundedImageView {
         let imageView = RoundedImageView()
@@ -165,6 +187,19 @@ extension Components {
         button.titleFont = typography.caption1
 
         return button
+    }
+    
+    public func makeRoundedView(bounds: CGRect, lineColor: UIColor, image: UIImage) -> UIView {
+        let view = RoundedView()
+        view.bounds = bounds
+        view.setup(color: lineColor, image: image)
+        return view
+    }
+    
+    public func makeBreakerView(lineColor: UIColor, textColor: UIColor, text: String) -> UIView {
+        let view = BreakerView()
+        view.setup(lineColor: lineColor, textColor: textColor, text: text)
+        return view
     }
 
     public func makeInAppBrowserViewController(for url: URL) -> UIViewController {

@@ -21,6 +21,8 @@ extension Colors {
     public var labelPrimaryVariant: UIColor { valueOrStub("label_primary_variant") }
     public var labelSecondary: UIColor { valueOrStub("label_secondary") }
     public var labelSecondaryVariant: UIColor { valueOrStub("label_secondary_variant") }
+    public var labelTertiary: UIColor { valueOrStub("label_tertiary") }
+    public var labelTertiaryVariant: UIColor { valueOrStub("label_tertiary_variant") }
 
     // MARK: - Background
 
@@ -35,6 +37,7 @@ extension Colors {
 
     public var fillPrimary: UIColor { valueOrStub("fill_primary") }
     public var fillPrimaryVariant: UIColor { valueOrStub("fill_primary_variant") }
+    public var fillPrimaryDisabled: UIColor { valueOrStub("fill_primary_disabled") }
 }
 
 // MARK: - Color Palette

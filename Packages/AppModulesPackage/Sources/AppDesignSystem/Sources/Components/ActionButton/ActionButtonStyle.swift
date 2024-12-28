@@ -166,17 +166,14 @@ public struct PrimaryActionButtonStyle: ActionButtonStyle {
 
 public struct TextButtonStyle: ActionButtonStyle {
 
-    private var normalBackgroundColor: UIColor { colors.backgroundPrimary }
-    private var disabledBackgroundColor: UIColor { colors.backgroundPrimary }
+    private var normalTextColor: UIColor
+    private var disabledTextColor: UIColor
 
-    private var normalTextColor: UIColor { .systemBlue }
-    private var disabledTextColor: UIColor { colors.labelSecondary }
-
-    private let colors: Colors
     private let typography: Typography
 
-    init(colors: Colors, typography: Typography) {
-        self.colors = colors
+    init(textColor: UIColor, disabledTextColor: UIColor, typography: Typography) {
+        self.normalTextColor = textColor
+        self.disabledTextColor = disabledTextColor
         self.typography = typography
     }
 
@@ -185,8 +182,6 @@ public struct TextButtonStyle: ActionButtonStyle {
     }
 
     public func applyNormalAppearance(to button: UIButton) {
-        button.titleLabel?.font = typography.headline
-        button.backgroundColor = normalBackgroundColor
     }
 
     public func applyHighlightedAppearance(to button: UIButton) {
@@ -194,8 +189,6 @@ public struct TextButtonStyle: ActionButtonStyle {
     }
 
     public func applyDisabledAppearance(to button: UIButton) {
-        button.titleLabel?.font = typography.subheadline
-        button.backgroundColor = disabledBackgroundColor
     }
 
     public func applyContentAppearance(to button: UIButton) {
@@ -400,5 +393,89 @@ public struct DisableBorderedStyle: ActionButtonStyle {
         button.setTitleColor(dasabledTextColor, for: .normal)
         button.adjustsImageWhenDisabled = false
         button.tintColor = dasabledTextColor
+    }
+}
+
+public struct RoundedNoDisabledStyle: ActionButtonStyle {
+
+    private var normalBackgroundColor: UIColor { colors.backgroundPrimary }
+
+    private var normalTextColor: UIColor { colors.labelPrimary }
+    
+    private let cornerRadius: CGFloat
+
+    private let colors: Colors
+
+    // TODO: It should be internal
+    public init(colors: Colors, cornerRadius: CGFloat) {
+        self.colors = colors
+        self.cornerRadius = cornerRadius
+    }
+
+    public func setup(for button: UIButton) {
+        defaultSetup(to: button)
+    }
+
+    public func applyNormalAppearance(to button: UIButton) {
+        button.layer.cornerRadius = 16
+        button.backgroundColor = normalBackgroundColor
+        button.titleLabel?.font = .systemFont(ofSize: 16, weight: .medium)
+    }
+
+    public func applyHighlightedAppearance(to button: UIButton) {
+        // INFO: Use default highlighting
+    }
+
+    public func applyDisabledAppearance(to button: UIButton) {
+        // INFO: Don't use Disabled state
+    }
+
+    public func applyContentAppearance(to button: UIButton) {
+        button.setTitleColor(normalTextColor, for: .normal)
+    }
+}
+
+public struct RoundedWithDisabledStyle: ActionButtonStyle {
+
+    private var normalBackgroundColor: UIColor { colors.fillPrimary }
+
+    private var normalTextColor: UIColor { colors.labelPrimaryVariant }
+    
+    private var disabledBackgroundColor: UIColor { colors.fillPrimaryDisabled }
+    
+    private var disabledTextColor: UIColor { colors.labelSecondary }
+    
+    private let cornerRadius: CGFloat
+
+    private let colors: Colors
+
+    // TODO: It should be internal
+    public init(colors: Colors, cornerRadius: CGFloat) {
+        self.colors = colors
+        self.cornerRadius = cornerRadius
+    }
+
+    public func setup(for button: UIButton) {
+        defaultSetup(to: button)
+    }
+
+    public func applyNormalAppearance(to button: UIButton) {
+        button.layer.cornerRadius = 16
+        button.backgroundColor = normalBackgroundColor
+        button.titleLabel?.textColor = normalTextColor
+        button.titleLabel?.font = .systemFont(ofSize: 16)
+    }
+
+    public func applyHighlightedAppearance(to button: UIButton) {
+        button.backgroundColor = normalBackgroundColor.withAlphaComponent(0.7)
+    }
+
+    public func applyDisabledAppearance(to button: UIButton) {
+        button.backgroundColor = disabledBackgroundColor
+        button.titleLabel?.textColor = disabledTextColor
+    }
+
+    public func applyContentAppearance(to button: UIButton) {
+        button.setTitleColor(normalTextColor, for: .normal)
     }
 }

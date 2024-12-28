@@ -2,6 +2,7 @@
 
 import UIKit
 import Combine
+import AppDesignSystem
 
 // MARK: - ViewModel
 
@@ -44,6 +45,8 @@ open class BaseViewModel<ViewEvent, ViewState: Stubable, OutputEvent>: ViewModel
 
     /// This collection with any cancelable tokens to manage subscription lifecycle
     public var cancelableSet: Set<AnyCancellable> = .init()
+    
+    public var strings = appDesignSystem.strings
 
     // MARK: - View Model Input
 

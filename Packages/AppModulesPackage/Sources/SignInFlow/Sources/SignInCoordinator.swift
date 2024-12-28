@@ -36,33 +36,13 @@ public final class SignInCoordinator: EventCoordinator {
     }
 
     public func start() {
-        startEnterPhoneScreen()
+        startSignUpScreen()
     }
 }
 
 // MARK: - Starting Screens
 
 private extension SignInCoordinator {
-
-    private func startEnterPhoneScreen() {
-//        let viewModel = EnterPhoneViewModel(signInInteractor: signInInteractor)
-//        let viewController = EnterPhoneNumberViewController(viewModel: viewModel)
-//        viewController.title = appDesignSystem.strings.commonSignIn
-//
-//        viewModel.outputEventPublisher
-//            .sink { [weak self] event in
-//                guard let self = self else { return }
-//
-//                switch event {
-//                case .continue: self.startEnterSmsCode()
-//                case .back: self.eventSubject.send(.exit)
-//                }
-//            }
-//            .store(in: &setCancelable)
-//
-//        navigationController?.pushViewController(viewController, animated: true)
-//        navigationController?.setNavigationBarHidden(false, animated: false)
-    }
 
     private func startEnterSmsCode() {
 //        let viewModel = EnterSmsCodeViewModel(signInInteractor: signInInteractor)
@@ -86,5 +66,33 @@ private extension SignInCoordinator {
 //
 //        navigationController?.pushViewController(viewController, animated: false)
 //        navigationController?.setNavigationBarHidden(false, animated: false)
+    }
+    
+    private func startSignUpScreen() {
+        let viewModel = SignUpViewModel()
+        let viewController = SignUpViewController(viewModel: viewModel)
+        
+        viewModel.outputEventPublisher
+            .sink { [weak self] event in
+                guard let self else { return }
+                
+                switch event {
+                case .didSelectProvider(let provider):
+                    switch provider {
+                    case .pwd:
+                        print("pwd")
+                    case .apple:
+                        print("apple")
+                    case .facebook:
+                        print("facebook")
+                    case .google:
+                        print("google")
+                    }
+                }
+            }
+            .store(in: &setCancelable)
+        
+        navigationController?.setViewControllers([viewController], animated: true)
+        navigationController?.setNavigationBarHidden(false, animated: false)
     }
 }
