@@ -33,3 +33,7 @@ extension SignUpWithEmailContext {
         case viewDidLoad
     }
 }
+
+extension SignUpWithEmailContext {
+    typealias ScreenError = BaseUIError<Void>
+}

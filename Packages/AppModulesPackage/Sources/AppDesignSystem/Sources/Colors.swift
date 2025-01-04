@@ -38,6 +38,7 @@ extension Colors {
     public var fillPrimary: UIColor { valueOrStub("fill_primary") }
     public var fillPrimaryVariant: UIColor { valueOrStub("fill_primary_variant") }
     public var fillPrimaryDisabled: UIColor { valueOrStub("fill_primary_disabled") }
+    public var fillSecondary: UIColor { valueOrStub("fill_secondary") }
 }
 
 // MARK: - Color Palette

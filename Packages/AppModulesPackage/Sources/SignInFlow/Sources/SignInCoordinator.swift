@@ -80,7 +80,7 @@ private extension SignInCoordinator {
                 case .didSelectProvider(let provider):
                     switch provider {
                     case .pwd:
-                        print("pwd")
+                        startPwdSignUpScreen()
                     case .apple:
                         print("apple")
                     case .facebook:
@@ -94,5 +94,23 @@ private extension SignInCoordinator {
         
         navigationController?.setViewControllers([viewController], animated: true)
         navigationController?.setNavigationBarHidden(false, animated: false)
+    }
+    
+    private func startPwdSignUpScreen() {
+        let viewModel = SignUpWithEmailViewModel()
+        let viewController = SignUpWithEmailViewController(viewModel: viewModel)
+        
+        viewModel.outputEventPublisher
+            .sink { [weak self] event in
+                guard let self else { return }
+                
+                switch event {
+                case .finish:
+                    print("fsd")
+                }
+            }
+            .store(in: &setCancelable)
+        
+        navigationController?.present(viewController, animated: true)
     }
 }

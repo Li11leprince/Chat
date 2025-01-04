@@ -85,10 +85,25 @@ extension StringsLibrary {
             arg: seconds
         )
     }
-    public var signUpWithMail: String { localized("sign_in_sign_up_with_mail") }
+    public var signUpWithMail: String { localized("sign_in_sign_up_with_email") }
     public var signInOurChatAppIsPerfect: String { localized("sign_in_our_chat_is_perfect_way") }
     public var signInConnectFriends: String { localized("sign_in_connect_friends") }
     public var signInEasyAndQuickly: String { localized("sign_in_easily_quickly") }
     public var signInExistingAccount: String { localized("sign_in_existing_account") }
     public var signInLogIn: String { localized("sign_in_log_in") }
+    public var signInGetChattingWithFriends: String { localized("sign_in_get_chatting_with_friends") }
+    public var signInYourName: String { localized("sign_in_your_name") }
+    public var signInYourEmail: String { localized("sign_in_your_email") }
+    public var signInPassword: String { localized("sign_in_password") }
+    public var signInConfirmPassword: String { localized("sign_in_confirm_password") }
+    public var signInCreateAccount: String { localized("sign_in_create_account") }
+    public var signInInvalidName: String { localized("sign_in_invalid_name") }
+    public var signInInvalidEmail: String { localized("sign_in_invalid_email") }
+    public func signInInvalidPassword(minLength: String) -> String {
+        formatted(
+            localized("sign_in_invalid_password"),
+            arg: minLength
+        )
+    }
+    public var signInInvalidConfirmPassword: String { localized("sign_in_invalid_confirm_password") }
 }

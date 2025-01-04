@@ -11,6 +11,7 @@ final class SignUpViewController: BaseViewController<SignUpViewModel,
     override func viewDidLoad() {
         super.viewDidLoad()
         viewModel.onViewEvent(.viewDidLoad)
+        bindActions()
     }
     
     override func onViewState(_ viewState: SignUpContext.ViewState) {
@@ -19,5 +20,13 @@ final class SignUpViewController: BaseViewController<SignUpViewModel,
             contentView.titleLabel.attributedText = viewModel.provideTitleText()
             contentView.subtitleLabel.attributedText = viewModel.provideSubtitleText()
         }
+    }
+    
+    private func bindActions() {
+        contentView.signUpWithEmailButton.touchUpInsidePublisher
+            .sink { [weak self] in
+                self?.viewModel.onViewEvent(.signUpWithEmailPressed)
+            }
+            .store(in: &cancelableSet)
     }
 }

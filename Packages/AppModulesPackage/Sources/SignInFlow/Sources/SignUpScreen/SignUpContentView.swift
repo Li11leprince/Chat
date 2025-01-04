@@ -110,13 +110,13 @@ extension SignUpContext {
             
             titleLabel.snp.makeConstraints { make in
                 make.top.equalTo(chatLogoImageView.snp.bottom).inset(-44)
-                make.left.right.equalToSuperview().inset(24)
+                make.leading.trailing.equalToSuperview().inset(24)
             }
             
             subtitleLabel.snp.makeConstraints { make in
                 make.top.equalTo(titleLabel.snp.bottom).inset(-16)
-                make.left.equalToSuperview().inset(24)
-                make.right.equalToSuperview().inset(67)
+                make.leading.equalToSuperview().inset(24)
+                make.trailing.equalToSuperview().inset(67)
             }
             
             horizontalStackView.snp.makeConstraints { make in
@@ -125,24 +125,24 @@ extension SignUpContext {
             }
             
             breakerView.snp.makeConstraints { make in
-                make.left.right.equalToSuperview().inset(30)
+                make.leading.trailing.equalToSuperview().inset(30)
                 make.top.equalTo(horizontalStackView.snp.bottom).inset(-30)
                 make.height.equalTo(15)
             }
             
             signUpWithEmailButton.snp.makeConstraints { make in
-                make.left.right.equalToSuperview().inset(24)
+                make.leading.trailing.equalToSuperview().inset(24)
                 make.top.equalTo(breakerView.snp.bottom).inset(-30)
                 make.height.equalTo(48)
             }
             
             existingAccountLabel.snp.makeConstraints { make in
-                make.left.equalToSuperview().inset(109)
+                make.leading.equalToSuperview().inset(109)
                 make.top.equalTo(signUpWithEmailButton.snp.bottom).inset(-46)
             }
             
             loginButton.snp.makeConstraints { make in
-                make.right.equalToSuperview().inset(120)
+                make.trailing.equalToSuperview().inset(120)
                 make.top.equalTo(signUpWithEmailButton.snp.bottom).inset(-46)
             }
         }

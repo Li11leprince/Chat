@@ -128,7 +128,6 @@ struct ContentActionButtonStyle: ActionButtonStyle {
 
 public struct PrimaryActionButtonStyle: ActionButtonStyle {
 
-    private var normalBackgroundColor: UIColor { colors.backgroundSecondary }
     private var disabledBackgroundColor: UIColor { colors.backgroundSecondaryDisabled }
 
     private var normalTextColor: UIColor { colors.labelPrimaryVariant }
@@ -145,7 +144,6 @@ public struct PrimaryActionButtonStyle: ActionButtonStyle {
     }
 
     public func applyNormalAppearance(to button: UIButton) {
-        button.backgroundColor = normalBackgroundColor
     }
 
     public func applyHighlightedAppearance(to button: UIButton) {
@@ -463,7 +461,6 @@ public struct RoundedWithDisabledStyle: ActionButtonStyle {
         button.layer.cornerRadius = 16
         button.backgroundColor = normalBackgroundColor
         button.titleLabel?.textColor = normalTextColor
-        button.titleLabel?.font = .systemFont(ofSize: 16)
     }
 
     public func applyHighlightedAppearance(to button: UIButton) {
@@ -472,10 +469,11 @@ public struct RoundedWithDisabledStyle: ActionButtonStyle {
 
     public func applyDisabledAppearance(to button: UIButton) {
         button.backgroundColor = disabledBackgroundColor
-        button.titleLabel?.textColor = disabledTextColor
+        button.setTitleColor(disabledTextColor, for: .disabled)
     }
 
     public func applyContentAppearance(to button: UIButton) {
         button.setTitleColor(normalTextColor, for: .normal)
+        button.titleLabel?.font = .systemFont(ofSize: 16, weight: .medium)
     }
 }

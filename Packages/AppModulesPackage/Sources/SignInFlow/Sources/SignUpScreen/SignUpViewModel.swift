@@ -17,7 +17,7 @@ final class SignUpViewModel: BaseViewModel<SignUpContext.ViewEvent,
         case .viewDidLoad:
             viewState = .initial
         case .signUpWithEmailPressed:
-            print("f")
+            outputEventSubject.send(.didSelectProvider(.pwd))
         case .loginPressed:
             print("fds")
         }
