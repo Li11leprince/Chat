@@ -26,6 +26,7 @@ extension SignUpContext {
     
     enum OutputEvent {
         case didSelectProvider(Provider)
+        case login
     }
 }
 

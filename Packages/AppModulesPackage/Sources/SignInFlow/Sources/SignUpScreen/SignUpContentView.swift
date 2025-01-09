@@ -142,7 +142,7 @@ extension SignUpContext {
             }
             
             loginButton.snp.makeConstraints { make in
-                make.trailing.equalToSuperview().inset(120)
+                make.leading.equalTo(existingAccountLabel.snp.trailing).inset(5)
                 make.top.equalTo(signUpWithEmailButton.snp.bottom).inset(-46)
             }
         }

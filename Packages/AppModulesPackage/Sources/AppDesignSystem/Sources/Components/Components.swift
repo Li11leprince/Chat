@@ -62,6 +62,15 @@ extension Components {
     }
 }
 
+// MARK: - NavBar
+
+extension Components {
+    public func navBarAppearance() {
+        let appearance = UINavigationBar.appearance()
+        appearance.tintColor = colors.labelPrimary
+    }
+}
+
 // MARK: - Common Components
 
 extension Components {

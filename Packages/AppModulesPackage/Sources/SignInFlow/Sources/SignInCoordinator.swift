@@ -75,7 +75,6 @@ private extension SignInCoordinator {
         viewModel.outputEventPublisher
             .sink { [weak self] event in
                 guard let self else { return }
-                
                 switch event {
                 case .didSelectProvider(let provider):
                     switch provider {
@@ -88,12 +87,31 @@ private extension SignInCoordinator {
                     case .google:
                         print("google")
                     }
+                case .login:
+                    startLoginScreen()
                 }
             }
             .store(in: &setCancelable)
         
         navigationController?.setViewControllers([viewController], animated: true)
         navigationController?.setNavigationBarHidden(false, animated: false)
+    }
+    
+    private func startLoginScreen() {
+        let viewModel = SignInViewModel()
+        let viewController = SignInViewController(viewModel: viewModel)
+        
+        viewModel.outputEventPublisher
+            .sink { [weak self] event in
+                guard let self else { return }
+                switch event {
+                case .didSignIn:
+                    print("sign in")
+                }
+            }
+            .store(in: &setCancelable)
+        
+        navigationController?.pushViewController(viewController, animated: true)
     }
     
     private func startPwdSignUpScreen() {

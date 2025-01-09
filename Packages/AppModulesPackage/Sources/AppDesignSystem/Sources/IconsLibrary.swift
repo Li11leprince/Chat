@@ -24,6 +24,7 @@ extension IconsLibrary {
     public var googleIcon: UIImage { valueOrStub("google_icon") }
     public var purpleEllipse: UIImage { valueOrStub("purple_ellipse") }
     public var appLogo: UIImage { valueOrStub("chatLogo") }
+    public var backButton: UIImage { valueOrStub("back_button_icon") }
 }
 
 // SFSymbols Example

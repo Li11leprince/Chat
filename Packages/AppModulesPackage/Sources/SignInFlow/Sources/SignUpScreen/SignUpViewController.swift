@@ -28,5 +28,11 @@ final class SignUpViewController: BaseViewController<SignUpViewModel,
                 self?.viewModel.onViewEvent(.signUpWithEmailPressed)
             }
             .store(in: &cancelableSet)
+        
+        contentView.loginButton.touchUpInsidePublisher
+            .sink { [weak self] in
+                self?.viewModel.onViewEvent(.loginPressed)
+            }
+            .store(in: &cancelableSet)
     }
 }

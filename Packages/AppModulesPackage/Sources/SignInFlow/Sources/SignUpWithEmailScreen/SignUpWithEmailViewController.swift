@@ -8,11 +8,15 @@ final class SignUpWithEmailViewController: BaseViewController<SignUpWithEmailVie
                                            SignUpWithEmailContext.ViewEvent,
                                            SignUpWithEmailContext.ViewState,
                                            SignUpWithEmailContext.ContentView> {
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         addObservers()
         bindViewActions()
+        showGrabber()
+        setupTextFieldsDelegates()
     }
+    
     override func onViewState(_ viewState: SignUpWithEmailContext.ViewState) {
         switch viewState {
         case .initial:
@@ -27,6 +31,19 @@ final class SignUpWithEmailViewController: BaseViewController<SignUpWithEmailVie
                 self?.contentView.confirmPasswordTextField.isSecureTextEntry.toggle()
             }
             .store(in: &cancelableSet)
+    }
+    
+    private func showGrabber() {
+        if let presentationController = presentationController as? UISheetPresentationController {
+            presentationController.prefersGrabberVisible = true
+        }
+    }
+    
+    private func setupTextFieldsDelegates() {
+        contentView.confirmPasswordTextField.delegate = self
+        contentView.emailTextField.delegate = self
+        contentView.nameTextField.delegate = self
+        contentView.passwordTextField.delegate = self
     }
 }
 
@@ -103,5 +120,12 @@ extension SignUpWithEmailViewController {
                 self.contentView.signUpButton.isEnabled = self.viewModel.isFormValid(form.0, form.1, form.2, form.3)
             }
             .store(in: &cancelableSet)
+    }
+}
+
+extension SignUpWithEmailViewController: UITextFieldDelegate{
+    public func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        textField.resignFirstResponder()
+        return true;
     }
 }

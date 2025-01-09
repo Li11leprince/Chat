@@ -9,6 +9,7 @@ import AppServices
 import AppBaseFlow
 import SignInFlow
 import HomeFlow
+import AppDesignSystem
 
 final class AppCoordinator: BaseCoordinator, Coordinator {
 
@@ -25,7 +26,7 @@ final class AppCoordinator: BaseCoordinator, Coordinator {
     
     func start() {
         initWindow()
-
+        appDesignSystem.components.navBarAppearance()
         if authService.isLoggedIn() {
             startAuthorizedFlow()
         } else {

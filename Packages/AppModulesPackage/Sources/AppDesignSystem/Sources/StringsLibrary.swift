@@ -54,37 +54,6 @@ extension StringsLibrary {
     public var welcomePrivacyPolicy: String { localized("welcome_privacy_policy") }
 
     // MARK: - Sign In
-
-    public func signInWeSentCodeTo(formattedPhoneNumber: String) -> String {
-        formatted(
-            localized("sign_in_we_sent_code_to"),
-            arg: formattedPhoneNumber
-        )
-    }
-    public var signInVerifyContentTitle: String { localized("sign_in_verify_content_title") }
-    public var signInVerifyPlaceholder: String { localized("sign_in_verify_placeholder") }
-    public var signInResentButtonActive: String { localized("sign_in_resent_button_active") }
-    public func signInResentButtonDisable(formattedTimer: String) -> String {
-        formatted(
-            localized("sign_in_resent_button_disable"),
-            arg: formattedTimer
-        )
-    }
-
-    public var signInPhoneContentTitle: String { localized("sign_in_phone_content_title") }
-    public var signInPhoneCaption: String { localized("sign_in_phone_caption") }
-
-    public var signInErrorSmsCodeIsInvalid: String { localized("sign_in_error_sms_code_is_invalid")
-    }
-    public var signInErrorSmsCodeExpired: String {
-        localized("sign_in_error_sms_code_expired")
-    }
-    public func signInErrorExceedLimitSmsCode(seconds: String) -> String {
-        formatted(
-            localized("sign_in_error_exceed_limit_sms_code"),
-            arg: seconds
-        )
-    }
     public var signUpWithMail: String { localized("sign_in_sign_up_with_email") }
     public var signInOurChatAppIsPerfect: String { localized("sign_in_our_chat_is_perfect_way") }
     public var signInConnectFriends: String { localized("sign_in_connect_friends") }
@@ -106,4 +75,8 @@ extension StringsLibrary {
         )
     }
     public var signInInvalidConfirmPassword: String { localized("sign_in_invalid_confirm_password") }
+    public var signInLoginToChatbox: String { localized("sign_in_login_to_chatbox") }
+    public var signInWelcomeBack: String { localized("sign_in_welcome_back") }
+    public var signInLogin: String { localized("sign_in_login") }
+    public var signInForgotPassword: String { localized("sign_in_forgot_password") }
 }

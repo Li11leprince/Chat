@@ -39,10 +39,6 @@
 "sign_in_sign_up_with_email" = "Sign up with email";
 "sign_in_existing_account" = "Existing account?";
 "sign_in_log_in" = "Log in";
-"sign_in_resent_button_disable" = "Resend code in %@";
-"sign_in_error_sms_code_is_invalid" = "You've entered the wrong code. Please try again";
-"sign_in_error_sms_code_expired" = "Your session has expired. Please tap resend code";
-"sign_in_error_exceed_limit_sms_code" = "You can receive a new code in %@ seconds";
 "sign_in_get_chatting_with_friends" = "Get chatting with friends and family today by signing up for our chat app!";
 "sign_in_your_name" = "Your name";
 "sign_in_your_email" = "Your email";
@@ -53,3 +49,7 @@
 "sign_in_invalid_email" = "Invalid email address";
 "sign_in_invalid_password" = "Min lenght is %@ symbols. Should use [0-9], [A-Z], [!@#$%^&*(),.?\":{}|<>]";
 "sign_in_invalid_confirm_password" = "Passwords are not equal";
+"sign_in_login_to_chatbox" = "Log in to Chatbox";
+"sign_in_welcome_back" = "Welcome back! Sign in using your social account or email to continue us";
+"sign_in_login" = "Log in";
+"sign_in_forgot_password" = "Forgot password?";

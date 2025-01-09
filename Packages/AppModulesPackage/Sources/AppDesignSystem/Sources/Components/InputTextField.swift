@@ -47,7 +47,7 @@ extension TweeAttributedTextField {
 
         // line color should use separator color
         tweeAttributedTextField.activeLineColor = colors.fillPrimary
-        tweeAttributedTextField.lineColor = colors.fillPrimaryDisabled
+        tweeAttributedTextField.lineColor = colors.labelSecondaryVariant
         tweeAttributedTextField.lineWidth = 1
         tweeAttributedTextField.placeholderLabel.font = typography.body
         tweeAttributedTextField.placeholderColor = colors.labelTertiary
@@ -58,6 +58,7 @@ extension TweeAttributedTextField {
         tweeAttributedTextField.textColor = colors.labelPrimary
         
         tweeAttributedTextField.shouldResignOnTouchOutsideMode = .enabled
+        tweeAttributedTextField.returnKeyType = .done
 
         return tweeAttributedTextField
     }

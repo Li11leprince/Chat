@@ -170,6 +170,54 @@ enum ExternalModules {
             from: "7.8.0"
         )
     )
+    static let firebaseAnalytics = ExternalPackage(
+        productName: "FirebaseAnalytics",
+        packageName: "Firebase",
+        dependency: .package(
+            url: "https://github.com/firebase/firebase-ios-sdk.git",
+            from: "11.6.0"
+        )
+    )
+    static let firebaseAuth = ExternalPackage(
+        productName: "FirebaseAuth",
+        packageName: "Firebase",
+        dependency: .package(
+            url: "https://github.com/firebase/firebase-ios-sdk.git",
+            from: "11.6.0"
+        )
+    )
+    static let firebaseCrashlytics = ExternalPackage(
+        productName: "FirebaseCrashlytics",
+        packageName: "Firebase",
+        dependency: .package(
+            url: "https://github.com/firebase/firebase-ios-sdk.git",
+            from: "11.6.0"
+        )
+    )
+    static let firebaseFirestore = ExternalPackage(
+        productName: "FirebaseFirestore",
+        packageName: "Firebase",
+        dependency: .package(
+            url: "https://github.com/firebase/firebase-ios-sdk.git",
+            from: "11.6.0"
+        )
+    )
+    static let firebaseMessaging = ExternalPackage(
+        productName: "FirebaseMessaging",
+        packageName: "Firebase",
+        dependency: .package(
+            url: "https://github.com/firebase/firebase-ios-sdk.git",
+            from: "11.6.0"
+        )
+    )
+    static let firebaseCore = ExternalPackage(
+        productName: "FirebaseCore",
+        packageName: "Firebase",
+        dependency: .package(
+            url: "https://github.com/firebase/firebase-ios-sdk.git",
+            from: "11.6.0"
+        )
+    )
 }
 
 // MARK: - External plugins
@@ -240,7 +288,9 @@ enum InternalModules {
             appBaseFlowModule,
             ExternalModules.alamofire,
             ExternalModules.sdWebImage,
-            ExternalModules.sdWebImageWebPCoder
+            ExternalModules.sdWebImageWebPCoder,
+            ExternalModules.firebaseAuth,
+            ExternalModules.firebaseCore
         ]
     )
     static let appServicesTestsModule: AppModule = .makeTestModule(
@@ -289,7 +339,13 @@ private let externalPackages: [ExternalPackage] = [
     ExternalModules.sdWebImageWebPCoder,
     ExternalModules.snapKit,
     ExternalModules.progressHUD,
-    ExternalModules.rSwift
+    ExternalModules.rSwift,
+    ExternalModules.firebaseAuth,
+    ExternalModules.firebaseAnalytics,
+    ExternalModules.firebaseFirestore,
+    ExternalModules.firebaseMessaging,
+    ExternalModules.firebaseCrashlytics,
+    ExternalModules.firebaseCore
 ]
 
 /// Defines use of product modules to build tha app
