@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		496AB8482D3E6BF50063D95B /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 496AB8472D3E6BF50063D95B /* GoogleService-Info.plist */; };
 		5D9470F625DC348000DE488C /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 5D9470F525DC348000DE488C /* InfoPlist.strings */; };
 		85D59EC32A2BC02900C2D91D /* UmbrellaPackage in Frameworks */ = {isa = PBXBuildFile; productRef = 85D59EC22A2BC02900C2D91D /* UmbrellaPackage */; };
 		88BB91D725B05F3400D1B443 /* AppContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88BB91D625B05F3400D1B443 /* AppContainer.swift */; };
@@ -30,6 +31,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		496AB8472D3E6BF50063D95B /* GoogleService-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		5D9470F525DC348000DE488C /* InfoPlist.strings */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; path = InfoPlist.strings; sourceTree = "<group>"; };
 		85D59EC02A2BB9FA00C2D91D /* UmbrellaPackage */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = UmbrellaPackage; path = Packages/UmbrellaPackage; sourceTree = "<group>"; };
 		85D59EC12A2BBCA000C2D91D /* AppModulesPackage */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = AppModulesPackage; path = Packages/AppModulesPackage; sourceTree = "<group>"; };
@@ -58,6 +60,14 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		496AB8462D3E6BDE0063D95B /* Firebase */ = {
+			isa = PBXGroup;
+			children = (
+				496AB8472D3E6BF50063D95B /* GoogleService-Info.plist */,
+			);
+			path = Firebase;
+			sourceTree = "<group>";
+		};
 		85D59EBF2A2BB9FA00C2D91D /* Packages */ = {
 			isa = PBXGroup;
 			children = (
@@ -110,6 +120,7 @@
 		88D12C6625AECED60001D30F /* SupportingFiles */ = {
 			isa = PBXGroup;
 			children = (
+				496AB8462D3E6BDE0063D95B /* Firebase */,
 				88D12C2825AEC6C70001D30F /* LaunchScreen.storyboard */,
 				88D12C2B25AEC6C70001D30F /* Info.plist */,
 				5D9470F525DC348000DE488C /* InfoPlist.strings */,
@@ -216,6 +227,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				496AB8482D3E6BF50063D95B /* GoogleService-Info.plist in Resources */,
 				88D12C2A25AEC6C70001D30F /* LaunchScreen.storyboard in Resources */,
 				5D9470F625DC348000DE488C /* InfoPlist.strings in Resources */,
 				88D12C2725AEC6C70001D30F /* Assets.xcassets in Resources */,

@@ -180,7 +180,7 @@ enum ExternalModules {
     )
     static let firebaseAuth = ExternalPackage(
         productName: "FirebaseAuth",
-        packageName: "Firebase",
+        packageName: "firebase-ios-sdk",
         dependency: .package(
             url: "https://github.com/firebase/firebase-ios-sdk.git",
             from: "11.6.0"
@@ -212,7 +212,7 @@ enum ExternalModules {
     )
     static let firebaseCore = ExternalPackage(
         productName: "FirebaseCore",
-        packageName: "Firebase",
+        packageName: "firebase-ios-sdk",
         dependency: .package(
             url: "https://github.com/firebase/firebase-ios-sdk.git",
             from: "11.6.0"
@@ -340,11 +340,11 @@ private let externalPackages: [ExternalPackage] = [
     ExternalModules.snapKit,
     ExternalModules.progressHUD,
     ExternalModules.rSwift,
-    ExternalModules.firebaseAuth,
-    ExternalModules.firebaseAnalytics,
-    ExternalModules.firebaseFirestore,
-    ExternalModules.firebaseMessaging,
-    ExternalModules.firebaseCrashlytics,
+//    ExternalModules.firebaseAuth,
+//    ExternalModules.firebaseAnalytics,
+//    ExternalModules.firebaseFirestore,
+//    ExternalModules.firebaseMessaging,
+//    ExternalModules.firebaseCrashlytics,
     ExternalModules.firebaseCore
 ]
 
