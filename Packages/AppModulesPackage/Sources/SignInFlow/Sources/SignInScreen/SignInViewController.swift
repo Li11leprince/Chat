@@ -13,6 +13,15 @@ final class SignInViewController: BaseViewController<SignInViewModel,
         setupTextFieldsDelegates()
     }
     
+    override func onViewState(_ viewState: SignInContext.ViewState) {
+        switch viewState {
+        case .initial:
+            break
+        case .loading:
+            contentView.logInButton.isEnabled = true
+        }
+    }
+    
     private func setupTextFieldsDelegates() {
         contentView.emailTextField.delegate = self
         contentView.passwordTextField.delegate = self
@@ -35,6 +44,16 @@ extension SignInViewController {
                 self.contentView.logInButton.isEnabled = self.viewModel.isFormValid(email, password)
             }
             .store(in: &cancelableSet)
+        
+        contentView.logInButton.touchUpInsidePublisher
+            .sink { [weak self] in
+                guard let self,
+                      let email = self.contentView.emailTextField.text,
+                      let password = self.contentView.passwordTextField.text else {
+                    return
+                }
+                self.viewModel.onViewEvent(.signInTapped(email: email, password: password))
+            }
     }
 }
 

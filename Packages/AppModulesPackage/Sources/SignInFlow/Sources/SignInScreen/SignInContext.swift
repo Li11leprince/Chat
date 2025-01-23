@@ -13,6 +13,7 @@ extension SignInContext {
     
     enum ViewState: Stubable {
         case initial
+        case loading
         
         static var stub: ViewState { .initial }
     }
@@ -24,6 +25,7 @@ extension SignInContext {
 extension SignInContext {
     enum ViewEvent {
         case viewDidLoad
+        case signInTapped(email: String, password: String)
     }
 }
 

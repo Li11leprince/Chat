@@ -151,10 +151,10 @@ extension Components {
         return button
     }
     
-    public var roundedWithDisabledButton: ActionButton {
+    public var roundedWithDisabledButton: ActionButtonWithLoader {
         let style = RoundedWithDisabledStyle(colors: colors, cornerRadius: 16)
 
-        let button = ActionButton(type: .system)
+        let button = ActionButtonWithLoader(colors: colors)
         button.set(style: style)
 
         return button

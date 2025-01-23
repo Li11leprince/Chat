@@ -61,6 +61,7 @@ final class SignUpWithEmailViewModel: BaseViewModel<SignUpWithEmailContext.ViewE
     }
     
     private func signUp(email: String, password: String) {
+        viewState = .loading
         authService.signUp(email: email, password: password)
             .sink { [weak self] result in
                 switch result {

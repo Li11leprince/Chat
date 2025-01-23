@@ -67,7 +67,7 @@ extension SignUpWithEmailContext {
             return button
         }()
         
-        private(set) lazy var signUpButton: ActionButton = {
+        private(set) lazy var signUpButton: ActionButtonWithLoader = {
             let button = components.roundedWithDisabledButton
             button.setTitle(strings.signInCreateAccount, for: .normal)
             button.isEnabled = false

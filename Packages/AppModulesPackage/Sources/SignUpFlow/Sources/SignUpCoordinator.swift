@@ -80,6 +80,7 @@ private extension SignUpCoordinator {
                 
                 switch event {
                 case .finish:
+                    viewController.dismiss(animated: false)
                     eventSubject.send(.finish(.signedIn))
                 }
             }

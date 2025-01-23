@@ -21,6 +21,8 @@ final class SignUpWithEmailViewController: BaseViewController<SignUpWithEmailVie
         switch viewState {
         case .initial:
             break
+        case .loading:
+            contentView.signUpButton.isLoading = true
         }
     }
     

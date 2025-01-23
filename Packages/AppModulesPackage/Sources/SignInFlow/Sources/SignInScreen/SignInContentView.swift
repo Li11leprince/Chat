@@ -66,7 +66,7 @@ extension SignInContext {
             return stackView
         }()
         
-        private(set) lazy var logInButton: ActionButton = {
+        private(set) lazy var logInButton: ActionButtonWithLoader = {
             let button = components.roundedWithDisabledButton
             button.setTitle(strings.signInLogin, for: .normal)
             button.isEnabled = false

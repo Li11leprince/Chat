@@ -30,24 +30,20 @@ public final class FakeAuthServiceImpl: AuthService {
     
     public func signUp(email: String, password: String) -> AnyPublisher<VoidResult, Never> {
         saveCredentials()
-        let publisher: Just<VoidResult> = Just(Result.success(()))
-        return publisher.eraseToAnyPublisher()
+        return getDebouncedPublisher(isSuccess: true)
     }
     
     public func signIn(email: String, password: String) -> AnyPublisher<VoidResult, Never> {
         if isSignedUp {
             saveCredentials()
-            let publisher: Just<VoidResult> = Just(Result.success(()))
-            return publisher.eraseToAnyPublisher()
+            return getDebouncedPublisher(isSuccess: true)
         }
-        let publisher: Just<VoidResult> = Just(Result.failure(.unathorized))
-        return publisher.eraseToAnyPublisher()
+        return getDebouncedPublisher(isSuccess: false)
     }
     
     public func signOut() -> AnyPublisher<VoidResult, Never> {
         removeCredentials()
-        let publisher: Just<VoidResult> = Just(Result.success(()))
-        return publisher.eraseToAnyPublisher()
+        return getDebouncedPublisher(isSuccess: true)
     }
     
     private func saveCredentials() {
@@ -65,5 +61,13 @@ public final class FakeAuthServiceImpl: AuthService {
     
     private func removeCredentials() {
         memoryStorage.removeObject(forKey: signedInKey)
+    }
+    
+    private func getDebouncedPublisher(isSuccess: Bool) -> AnyPublisher<VoidResult, Never> {
+        let publisher = Just<VoidResult>(isSuccess ? .success(()) : .failure(.unathorized))
+            .delay(for: .seconds(1.0), scheduler: RunLoop.main)
+            .eraseToAnyPublisher()
+        
+        return publisher
     }
 }

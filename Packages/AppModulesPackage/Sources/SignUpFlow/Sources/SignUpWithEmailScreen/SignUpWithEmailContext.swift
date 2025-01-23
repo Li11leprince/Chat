@@ -13,6 +13,7 @@ struct SignUpWithEmailContext {
 extension SignUpWithEmailContext {
     enum ViewState: Stubable {
         case initial
+        case loading
         
         static var stub: ViewState { .initial }
     }
