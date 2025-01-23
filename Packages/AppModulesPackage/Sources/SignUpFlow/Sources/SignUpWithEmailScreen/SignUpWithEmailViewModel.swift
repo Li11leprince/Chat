@@ -1,6 +1,7 @@
 //  
 import AppBaseFlow
 import Foundation
+import AppServices
 
 final class SignUpWithEmailViewModel: BaseViewModel<SignUpWithEmailContext.ViewEvent,
                                       SignUpWithEmailContext.ViewState,
@@ -10,6 +11,9 @@ final class SignUpWithEmailViewModel: BaseViewModel<SignUpWithEmailContext.ViewE
     private let digitRegex = ".*[0-9].*"
     private let uppercaseRegex = ".*[A-Z].*"
     private let specialCharRegex = ".*[!@#$%^&*(),.?\":{}|<>].*"
+    
+    @Injected(\.authService) private var authService: AuthService
+    
     let passwordMinLenght = 5
     
     override init() {
@@ -20,6 +24,8 @@ final class SignUpWithEmailViewModel: BaseViewModel<SignUpWithEmailContext.ViewE
         switch event {
         case .viewDidLoad:
             break
+        case .signUp(email: let email, password: let password):
+            signUp(email: email, password: password)
         }
     }
     
@@ -52,5 +58,18 @@ final class SignUpWithEmailViewModel: BaseViewModel<SignUpWithEmailContext.ViewE
             && isNameValid(email)
             && isPasswordValid(password)
             && isConfirmPasswordValid(password, confirmPassword)
+    }
+    
+    private func signUp(email: String, password: String) {
+        authService.signUp(email: email, password: password)
+            .sink { [weak self] result in
+                switch result {
+                case .success():
+                    self?.outputEventSubject.send(.finish)
+                case .failure(_):
+                    break
+                }
+            }
+            .store(in: &cancelableSet)
     }
 }

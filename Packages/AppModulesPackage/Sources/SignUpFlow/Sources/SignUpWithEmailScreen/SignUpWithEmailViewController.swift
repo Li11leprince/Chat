@@ -31,6 +31,21 @@ final class SignUpWithEmailViewController: BaseViewController<SignUpWithEmailVie
                 self?.contentView.confirmPasswordTextField.isSecureTextEntry.toggle()
             }
             .store(in: &cancelableSet)
+        contentView.signUpButton.touchUpInsidePublisher
+            .sink { [weak self] in
+                guard let self,
+                      let email = self.contentView.emailTextField.text,
+                      let password = self.contentView.passwordTextField.text else {
+                    return
+                }
+                self.viewModel.onViewEvent(
+                    .signUp(
+                        email: email,
+                        password: password
+                    )
+                )
+            }
+            .store(in: &cancelableSet)
     }
     
     private func showGrabber() {

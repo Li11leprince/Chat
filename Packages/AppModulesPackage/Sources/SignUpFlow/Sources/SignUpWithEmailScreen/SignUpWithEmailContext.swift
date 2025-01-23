@@ -31,6 +31,7 @@ extension SignUpWithEmailContext {
 extension SignUpWithEmailContext {
     enum ViewEvent {
         case viewDidLoad
+        case signUp(email: String, password: String)
     }
 }
 

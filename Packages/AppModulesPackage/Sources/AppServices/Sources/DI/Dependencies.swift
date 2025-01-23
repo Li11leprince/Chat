@@ -12,6 +12,7 @@ struct AppContainer {
     fileprivate static let defaultJsonEncoder = JSONEncoder()
     fileprivate static let defaultJsonDecoder = JSONDecoder()
     @Injected(\.debugStorage) fileprivate static var debugStorage: DefaultsStorage
+    @Injected(\.memoryStorage) fileprivate static var memoryStorage: MemoryStorage
 
 
     fileprivate static let networkLogQueue = DispatchQueue(
@@ -77,7 +78,7 @@ private struct AlamofireHttpClientKey: InjectionKey {
 
 private struct AuthServiceKey: InjectionKey {
     static var currentValue: AuthService = {
-        let authService: AuthService = FakeAuthServiceImpl()
+        let authService: AuthService = FakeAuthServiceImpl(memoryStorage: AppContainer.memoryStorage)
         
         return authService
     }()

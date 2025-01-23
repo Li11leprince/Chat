@@ -300,6 +300,19 @@ enum InternalModules {
     )
 
     // MARK: - Feature Flows
+    
+    static let signUpFlowModule: AppModule = .makeModule(
+        name: "SignUpFlow",
+        dependencies: [
+            utilitiesModule,
+            appDesignSystemModule,
+            appEntitiesModule,
+            appBaseFlowModule,
+            appServicesModule,
+            ExternalModules.snapKit,
+            ExternalModules.tweeTextField
+        ]
+    )
 
     static let signInFlowModule: AppModule = .makeModule(
         name: "SignInFlow",
@@ -355,6 +368,7 @@ private let productAppModules: [AppModule] = [
     InternalModules.appEntitiesModule,
     InternalModules.appBaseFlowModule,
     InternalModules.appServicesModule,
+    InternalModules.signUpFlowModule,
     InternalModules.signInFlowModule,
     InternalModules.homeFlowModule
 ]

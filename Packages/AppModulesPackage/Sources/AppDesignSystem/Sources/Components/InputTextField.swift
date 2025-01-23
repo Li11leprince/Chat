@@ -51,7 +51,7 @@ extension TweeAttributedTextField {
         tweeAttributedTextField.lineWidth = 1
         tweeAttributedTextField.placeholderLabel.font = typography.body
         tweeAttributedTextField.placeholderColor = colors.labelTertiary
-        tweeAttributedTextField.placeholderDuration = 0.3
+        tweeAttributedTextField.placeholderDuration = 0.2
         tweeAttributedTextField.placeholderInsets = UIEdgeInsets(top: 0, left: 0, bottom: 8, right: 0)
         
         tweeAttributedTextField.font = typography.body
