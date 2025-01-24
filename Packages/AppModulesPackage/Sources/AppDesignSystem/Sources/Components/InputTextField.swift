@@ -46,14 +46,19 @@ extension TweeAttributedTextField {
         tweeAttributedTextField.animationDuration = 0.3
 
         // line color should use separator color
-        tweeAttributedTextField.activeLineColor = colors.backgroundSecondary
-        tweeAttributedTextField.lineColor = colors.labelSecondary
+        tweeAttributedTextField.activeLineColor = colors.fillPrimary
+        tweeAttributedTextField.lineColor = colors.labelSecondaryVariant
         tweeAttributedTextField.lineWidth = 1
         tweeAttributedTextField.placeholderLabel.font = typography.body
-
+        tweeAttributedTextField.placeholderColor = colors.labelTertiary
+        tweeAttributedTextField.placeholderDuration = 0.2
+        tweeAttributedTextField.placeholderInsets = UIEdgeInsets(top: 0, left: 0, bottom: 8, right: 0)
+        
         tweeAttributedTextField.font = typography.body
         tweeAttributedTextField.textColor = colors.labelPrimary
-        tweeAttributedTextField.placeholderColor = colors.labelSecondary
+        
+        tweeAttributedTextField.shouldResignOnTouchOutsideMode = .enabled
+        tweeAttributedTextField.returnKeyType = .done
 
         return tweeAttributedTextField
     }
@@ -71,9 +76,9 @@ extension TweeAttributedTextField {
     public func hideError(animated: Bool = true) {
         // TODO: Refactor using colors
         let colors = Colors()
-        activeLineColor = colors.backgroundSecondary
-        lineColor = colors.labelSecondary
-        placeholderColor = colors.labelSecondary
+        activeLineColor = colors.fillPrimary
+        lineColor = colors.fillPrimaryDisabled
+        placeholderColor = colors.labelTertiary
 
         hideInfo(animated: animated)
     }

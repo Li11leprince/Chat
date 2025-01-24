@@ -35,6 +35,7 @@ extension StringsLibrary {
     public var commonConfirmation: String { localized("common_confirmation") }
     public var commonDone: String { localized("common_done") }
     public var commonOpenSettings: String { localized("common_use_open_settings") }
+    public var commonOr: String { localized("common_or") }
 
     // MARK: - Common Errors
 
@@ -53,35 +54,29 @@ extension StringsLibrary {
     public var welcomePrivacyPolicy: String { localized("welcome_privacy_policy") }
 
     // MARK: - Sign In
-
-    public func signInWeSentCodeTo(formattedPhoneNumber: String) -> String {
+    public var signUpWithMail: String { localized("sign_in_sign_up_with_email") }
+    public var signInOurChatAppIsPerfect: String { localized("sign_in_our_chat_is_perfect_way") }
+    public var signInConnectFriends: String { localized("sign_in_connect_friends") }
+    public var signInEasyAndQuickly: String { localized("sign_in_easily_quickly") }
+    public var signInExistingAccount: String { localized("sign_in_existing_account") }
+    public var signInLogIn: String { localized("sign_in_log_in") }
+    public var signInGetChattingWithFriends: String { localized("sign_in_get_chatting_with_friends") }
+    public var signInYourName: String { localized("sign_in_your_name") }
+    public var signInYourEmail: String { localized("sign_in_your_email") }
+    public var signInPassword: String { localized("sign_in_password") }
+    public var signInConfirmPassword: String { localized("sign_in_confirm_password") }
+    public var signInCreateAccount: String { localized("sign_in_create_account") }
+    public var signInInvalidName: String { localized("sign_in_invalid_name") }
+    public var signInInvalidEmail: String { localized("sign_in_invalid_email") }
+    public func signInInvalidPassword(minLength: String) -> String {
         formatted(
-            localized("sign_in_we_sent_code_to"),
-            arg: formattedPhoneNumber
+            localized("sign_in_invalid_password"),
+            arg: minLength
         )
     }
-    public var signInVerifyContentTitle: String { localized("sign_in_verify_content_title") }
-    public var signInVerifyPlaceholder: String { localized("sign_in_verify_placeholder") }
-    public var signInResentButtonActive: String { localized("sign_in_resent_button_active") }
-    public func signInResentButtonDisable(formattedTimer: String) -> String {
-        formatted(
-            localized("sign_in_resent_button_disable"),
-            arg: formattedTimer
-        )
-    }
-
-    public var signInPhoneContentTitle: String { localized("sign_in_phone_content_title") }
-    public var signInPhoneCaption: String { localized("sign_in_phone_caption") }
-
-    public var signInErrorSmsCodeIsInvalid: String { localized("sign_in_error_sms_code_is_invalid")
-    }
-    public var signInErrorSmsCodeExpired: String {
-        localized("sign_in_error_sms_code_expired")
-    }
-    public func signInErrorExceedLimitSmsCode(seconds: String) -> String {
-        formatted(
-            localized("sign_in_error_exceed_limit_sms_code"),
-            arg: seconds
-        )
-    }
+    public var signInInvalidConfirmPassword: String { localized("sign_in_invalid_confirm_password") }
+    public var signInLoginToChatbox: String { localized("sign_in_login_to_chatbox") }
+    public var signInWelcomeBack: String { localized("sign_in_welcome_back") }
+    public var signInLogin: String { localized("sign_in_login") }
+    public var signInForgotPassword: String { localized("sign_in_forgot_password") }
 }

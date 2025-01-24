@@ -23,6 +23,8 @@ final class AppModule: AppModuleDependency {
     let dependencies: [any AppModuleDependency]
     /// Describes whether it is test module
     let isTestModule: Bool
+    /// Describes plugins are used
+    let plugins: [Target.PluginUsage]
 
     var targetDependency: Target.Dependency { .target(name: name) }
     /// Provides module as library product
@@ -31,34 +33,37 @@ final class AppModule: AppModuleDependency {
     var target: Target { makeTarget() }
 
     /// Makes product module
-    static func makeModule(name: String, resourcePath: String? = nil, dependencies: [AppModuleDependency] = []) -> AppModule {
+    static func makeModule(name: String, resourcePath: String? = nil, dependencies: [AppModuleDependency] = [], plugins: [Target.PluginUsage] = []) -> AppModule {
         AppModule(
             name: name,
             path: "Sources/\(name)/Sources",
             resourcePath: resourcePath,
             dependencies: dependencies,
-            isTestModule: false
+            isTestModule: false,
+            plugins: plugins
         )
     }
 
     /// Makes test module
-    static func makeTestModule(name: String, resourcePath: String? = nil, dependencies: [AppModuleDependency] = []) -> AppModule {
+    static func makeTestModule(name: String, resourcePath: String? = nil, dependencies: [AppModuleDependency] = [], plugins: [Target.PluginUsage] = []) -> AppModule {
         let testedModuleName = name.dropLast("Tests".count)
         return AppModule(
             name: name,
             path: "Sources/\(testedModuleName)/Tests",
             resourcePath: resourcePath,
             dependencies: dependencies,
-            isTestModule: true
+            isTestModule: true,
+            plugins: plugins
         )
     }
 
-    private init(name: String, path: String, resourcePath: String? = nil, dependencies: [AppModuleDependency] = [], isTestModule: Bool = false) {
+    private init(name: String, path: String, resourcePath: String? = nil, dependencies: [AppModuleDependency] = [], isTestModule: Bool = false, plugins: [Target.PluginUsage] = []) {
         self.name = name
         self.path = path
         self.resourcePath = resourcePath
         self.dependencies = dependencies
         self.isTestModule = isTestModule
+        self.plugins = plugins
     }
 
     private func makeTarget() -> Target {
@@ -68,9 +73,9 @@ final class AppModule: AppModuleDependency {
         }
 
         if isTestModule {
-            return .testTarget(name: name, dependencies: deps, path: path, resources: resources)
+            return .testTarget(name: name, dependencies: deps, path: path, resources: resources, plugins: plugins)
         } else {
-            return .target(name: name, dependencies: deps, path: path, resources: resources)
+            return .target(name: name, dependencies: deps, path: path, resources: resources, plugins: plugins)
         }
     }
 }
@@ -157,6 +162,71 @@ enum ExternalModules {
             from: "2.2.0"
         )
     )
+    static let rSwift = ExternalPackage(
+        productName: "RswiftLibrary",
+        packageName: "R.swift",
+        dependency: .package(
+            url: "https://github.com/mac-cain13/R.swift.git",
+            from: "7.8.0"
+        )
+    )
+    static let firebaseAnalytics = ExternalPackage(
+        productName: "FirebaseAnalytics",
+        packageName: "Firebase",
+        dependency: .package(
+            url: "https://github.com/firebase/firebase-ios-sdk.git",
+            from: "11.6.0"
+        )
+    )
+    static let firebaseAuth = ExternalPackage(
+        productName: "FirebaseAuth",
+        packageName: "firebase-ios-sdk",
+        dependency: .package(
+            url: "https://github.com/firebase/firebase-ios-sdk.git",
+            from: "11.6.0"
+        )
+    )
+    static let firebaseCrashlytics = ExternalPackage(
+        productName: "FirebaseCrashlytics",
+        packageName: "Firebase",
+        dependency: .package(
+            url: "https://github.com/firebase/firebase-ios-sdk.git",
+            from: "11.6.0"
+        )
+    )
+    static let firebaseFirestore = ExternalPackage(
+        productName: "FirebaseFirestore",
+        packageName: "Firebase",
+        dependency: .package(
+            url: "https://github.com/firebase/firebase-ios-sdk.git",
+            from: "11.6.0"
+        )
+    )
+    static let firebaseMessaging = ExternalPackage(
+        productName: "FirebaseMessaging",
+        packageName: "Firebase",
+        dependency: .package(
+            url: "https://github.com/firebase/firebase-ios-sdk.git",
+            from: "11.6.0"
+        )
+    )
+    static let firebaseCore = ExternalPackage(
+        productName: "FirebaseCore",
+        packageName: "firebase-ios-sdk",
+        dependency: .package(
+            url: "https://github.com/firebase/firebase-ios-sdk.git",
+            from: "11.6.0"
+        )
+    )
+}
+
+// MARK: - External plugins
+
+enum ExternalPlugins {
+    static let rSwiftPlugin: Target.PluginUsage = .plugin(
+        name: "RswiftGeneratePublicResources",
+        package: "R.swift"
+    )
 }
 
 // MARK: - Internal Module Declarations
@@ -184,9 +254,14 @@ enum InternalModules {
         dependencies: [
             utilitiesModule,
             ExternalModules.tweeTextField,
-            ExternalModules.progressHUD
+            ExternalModules.progressHUD,
+            ExternalModules.rSwift
+        ],
+        plugins: [
+            ExternalPlugins.rSwiftPlugin
         ]
     )
+    
     static let appDesignSystemTestsModule: AppModule = .makeTestModule(
         name: "AppDesignSystemTests",
         resourcePath: "Resources",
@@ -213,7 +288,9 @@ enum InternalModules {
             appBaseFlowModule,
             ExternalModules.alamofire,
             ExternalModules.sdWebImage,
-            ExternalModules.sdWebImageWebPCoder
+            ExternalModules.sdWebImageWebPCoder,
+            ExternalModules.firebaseAuth,
+            ExternalModules.firebaseCore
         ]
     )
     static let appServicesTestsModule: AppModule = .makeTestModule(
@@ -223,16 +300,17 @@ enum InternalModules {
     )
 
     // MARK: - Feature Flows
-
-    static let welcomeFlowModule: AppModule = .makeModule(
-        name: "WelcomeFlow",
+    
+    static let signUpFlowModule: AppModule = .makeModule(
+        name: "SignUpFlow",
         dependencies: [
             utilitiesModule,
             appDesignSystemModule,
             appEntitiesModule,
             appBaseFlowModule,
             appServicesModule,
-            ExternalModules.snapKit
+            ExternalModules.snapKit,
+            ExternalModules.tweeTextField
         ]
     )
 
@@ -273,7 +351,14 @@ private let externalPackages: [ExternalPackage] = [
     ExternalModules.sdWebImage,
     ExternalModules.sdWebImageWebPCoder,
     ExternalModules.snapKit,
-    ExternalModules.progressHUD
+    ExternalModules.progressHUD,
+    ExternalModules.rSwift,
+//    ExternalModules.firebaseAuth,
+//    ExternalModules.firebaseAnalytics,
+//    ExternalModules.firebaseFirestore,
+//    ExternalModules.firebaseMessaging,
+//    ExternalModules.firebaseCrashlytics,
+    ExternalModules.firebaseCore
 ]
 
 /// Defines use of product modules to build tha app
@@ -283,7 +368,7 @@ private let productAppModules: [AppModule] = [
     InternalModules.appEntitiesModule,
     InternalModules.appBaseFlowModule,
     InternalModules.appServicesModule,
-    InternalModules.welcomeFlowModule,
+    InternalModules.signUpFlowModule,
     InternalModules.signInFlowModule,
     InternalModules.homeFlowModule
 ]

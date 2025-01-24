@@ -62,6 +62,15 @@ extension Components {
     }
 }
 
+// MARK: - NavBar
+
+extension Components {
+    public func navBarAppearance() {
+        let appearance = UINavigationBar.appearance()
+        appearance.tintColor = colors.labelPrimary
+    }
+}
+
 // MARK: - Common Components
 
 extension Components {
@@ -84,8 +93,12 @@ extension Components {
         return actionButton
     }
 
-    public var textButton: ActionButton {
-        let style = TextButtonStyle(colors: colors, typography: typography)
+    public func textButton(textColor: UIColor, disabledTextColor: UIColor? = nil) -> ActionButton {
+        let style = TextButtonStyle(
+            textColor: textColor,
+            disabledTextColor: disabledTextColor == nil ? textColor : disabledTextColor!,
+            typography: typography
+        )
 
         let textButton = ActionButton(type: .system)
         textButton.set(style: style)
@@ -128,6 +141,24 @@ extension Components {
 
         return button
     }
+    
+    public var roundedNoDisabledButton: ActionButton {
+        let style = RoundedNoDisabledStyle(colors: colors, cornerRadius: 16)
+
+        let button = ActionButton(type: .system)
+        button.set(style: style)
+
+        return button
+    }
+    
+    public var roundedWithDisabledButton: ActionButtonWithLoader {
+        let style = RoundedWithDisabledStyle(colors: colors, cornerRadius: 16)
+
+        let button = ActionButtonWithLoader(colors: colors)
+        button.set(style: style)
+
+        return button
+    }
 
     public var roundedImageView: RoundedImageView {
         let imageView = RoundedImageView()
@@ -166,10 +197,39 @@ extension Components {
 
         return button
     }
+    
+    public func makeRoundedView(bounds: CGRect, lineColor: UIColor, image: UIImage) -> UIView {
+        let view = RoundedView()
+        view.bounds = bounds
+        view.setup(color: lineColor, image: image)
+        return view
+    }
+    
+    public func makeBreakerView(lineColor: UIColor, textColor: UIColor, text: String) -> UIView {
+        let view = BreakerView()
+        view.setup(lineColor: lineColor, textColor: textColor, text: text)
+        return view
+    }
 
     public func makeInAppBrowserViewController(for url: URL) -> UIViewController {
         let viewController = SFSafariViewController(url: url)
         viewController.dismissButtonStyle = .close
         return viewController
+    }
+    
+    // MARK: SnackBars
+    
+    public func showErrorSnackBar(in superView: UIView, message: String, location: SnackBarLocation) {
+        let style = SnackBarStyle(
+            backgroundColor: colors.labelTertiaryVariant,
+            textColor: colors.labelPrimaryVariant,
+            buttonColor: nil
+        )
+        SnackBar.show(
+            in: superView,
+            message: message,
+            style: style,
+            location: location
+        )
     }
 }

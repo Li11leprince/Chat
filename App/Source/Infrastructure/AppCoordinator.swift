@@ -7,9 +7,10 @@ import Utilities
 import AppEntities
 import AppServices
 import AppBaseFlow
-import WelcomeFlow
 import SignInFlow
 import HomeFlow
+import SignUpFlow
+import AppDesignSystem
 
 final class AppCoordinator: BaseCoordinator, Coordinator {
 
@@ -19,19 +20,22 @@ final class AppCoordinator: BaseCoordinator, Coordinator {
     private var window: UIWindow?
 
     // Dependencies
-    private let debugTogglesHolder = AppContainer.provideDebugTogglesHolder()
-    private let env: Env = AppContainer.provideEnv()
-    private let debugStorage = AppContainer.provideDebugDefaultsStorage()
-    private let defaultsStorage = AppContainer.provideDefaultsStorage()
-    private var authService = AppContainer.provideAuthService()
-
+    @Injected(\.env) private var env: Env
+    @Injected(\.debugStorage) private var debugStorage
+    @Injected(\.defaultsStorage) private var defaultsStorage
+    @Injected(\.authService) private var authService: AuthService
+    
     func start() {
         initWindow()
-
-        if authService.hasAuthorizedUser {
-            startAuthorizedFlow()
-        } else {
-            startWelcomeFlow()
+        appDesignSystem.components.navBarAppearance()
+        
+        switch authService.authState {
+        case .signedIn:
+            startHomeFlow()
+        case .signedUp:
+            startSignInFlow()
+        case .notRegistered:
+            startSignUpFlow()
         }
     }
 
@@ -47,19 +51,26 @@ final class AppCoordinator: BaseCoordinator, Coordinator {
 // MARK: - App Root Flows
 
 private extension AppCoordinator {
-
-    private func startAuthorizedFlow() {
-
-    }
-
-    private func startWelcomeFlow() {
-        let coordinator = WelcomeCoordinator(
+    
+    private func startSignUpFlow() {
+        let coordinator = SignUpCoordinator(
             navigationController: navigationController
         )
-        let token = coordinator.events.sink { [weak self] event in
-            guard let self = self else { return }
+        let token = coordinator.events.sink { [weak self, weak coordinator] event in
+            guard let self else { return }
+            
             switch event {
-            case .signIn: self.startSignInFlow()
+            case .finish(let authState):
+                switch authState {
+                case .signedIn:
+                    self.startHomeFlow()
+                    guard let coordinator = coordinator else { return }
+                    self.removeDependency(coordinator)
+                case .signedUp:
+                    self.startSignInFlow()
+                case .notRegistered:
+                    break
+                }
             }
         }
         addDependency(coordinator, token: token)
@@ -67,47 +78,35 @@ private extension AppCoordinator {
     }
 
     private func startSignInFlow() {
-//        let coordinator = SignInCoordinator(
-//            navigationController: navigationController,
-//            authService: authService
-//        )
-//
-//        let token = coordinator.events.sink { [weak self, weak coordinator] event in
-//            guard let self = self else { return }
-//
-//            switch event {
-//            case .exit:
-//                guard let coordinator = coordinator else { return }
-//                self.removeDependency(coordinator)
-//            case .finish(let authState):
-//                self.handleFinishedSignInFlow(with: authState)
-//            }
-//        }
-//        addDependency(coordinator, token: token)
-//        coordinator.start()
-    }
+        let coordinator = SignInCoordinator(
+            navigationController: navigationController
+        )
 
-    private func handleFinishedSignInFlow(with authState: AuthState) {
-        removeAll()
-        switch authState {
-        case .signIn:
-            startAuthorizedFlow()
-        case .signUp:
-            startCreateProfileFlow()
+        let token = coordinator.events.sink { [weak self, weak coordinator] event in
+            guard let self = self else { return }
+
+            switch event {
+            case .exit:
+                guard let coordinator = coordinator else { return }
+                self.removeDependency(coordinator)
+            case .finish:
+                self.startHomeFlow()
+                break
+            }
         }
+        addDependency(coordinator, token: token)
+        coordinator.start()
     }
 
     private func startHomeFlow() {
-//        let coordinator = HomeCoordinator(
-//            navigationController: navigationController,
-//            authService: authService,
-//            debugTogglesHolder: debugTogglesHolder
-//        )
-//        let token = coordinator.events.sink { _ in
-//            // IMPLEMENT: Event handling
-//        }
-//        addDependency(coordinator, token: token)
-//        coordinator.start()
+        let coordinator = HomeCoordinator(
+            navigationController: navigationController
+        )
+        let token = coordinator.events.sink { _ in
+            // IMPLEMENT: Event handling
+        }
+        addDependency(coordinator, token: token)
+        coordinator.start()
     }
 
     private func startCreateProfileFlow() {
