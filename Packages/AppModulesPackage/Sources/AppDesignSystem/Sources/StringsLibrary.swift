@@ -47,12 +47,6 @@ extension StringsLibrary {
 
     public var commonErrorNetwork: String { localized("common_error_network") }
 
-    // MARK: - Welcome
-
-    public var welcomeTermsServicePrivacyPolicy: String { localized("welcome_terms_service_privacy_policy") }
-    public var welcomeTermsService: String { localized("welcome_terms_service") }
-    public var welcomePrivacyPolicy: String { localized("welcome_privacy_policy") }
-
     // MARK: - Sign In
     public var signUpWithMail: String { localized("sign_in_sign_up_with_email") }
     public var signInOurChatAppIsPerfect: String { localized("sign_in_our_chat_is_perfect_way") }
@@ -79,4 +73,19 @@ extension StringsLibrary {
     public var signInWelcomeBack: String { localized("sign_in_welcome_back") }
     public var signInLogin: String { localized("sign_in_login") }
     public var signInForgotPassword: String { localized("sign_in_forgot_password") }
+    
+    
+    // MARK: - Chats
+
+    public var chatsChats: String { localized("chats_chats") }
+    
+    
+    // MARK: - Settings
+
+    public var settignsSettings: String { localized("settings_settings") }
+    
+    
+    // MARK: - Contacts
+
+    public var contactsContacts: String { localized("contacts_contacts") }
 }
