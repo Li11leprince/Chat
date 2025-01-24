@@ -11,6 +11,7 @@ final class SignInViewController: BaseViewController<SignInViewModel,
         super.viewDidLoad()
         addOnservers()
         setupTextFieldsDelegates()
+        bindActions()
     }
     
     override func onViewState(_ viewState: SignInContext.ViewState) {
@@ -18,13 +19,31 @@ final class SignInViewController: BaseViewController<SignInViewModel,
         case .initial:
             break
         case .loading:
-            contentView.logInButton.isEnabled = true
+            contentView.logInButton.isLoading = true
+        case .loaded:
+            contentView.logInButton.isLoading = false
+        case .error(let error):
+            contentView.components.showErrorSnackBar(in: view, message: contentView.strings.commonAuthErrorTitle, location: .top)
         }
     }
     
     private func setupTextFieldsDelegates() {
         contentView.emailTextField.delegate = self
         contentView.passwordTextField.delegate = self
+    }
+    
+    private func bindActions() {
+        contentView.logInButton.touchUpInsidePublisher
+            .sink { [weak self] in
+                guard let self,
+                      let email = self.contentView.emailTextField.text,
+                      let password = self.contentView.passwordTextField.text else {
+                    return
+                }
+                self.viewModel.onViewEvent(.signInTapped(email: email, password: password))
+            }
+            .store(in: &cancelableSet)
+
     }
     
 }

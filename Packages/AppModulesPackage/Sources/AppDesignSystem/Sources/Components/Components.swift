@@ -216,4 +216,20 @@ extension Components {
         viewController.dismissButtonStyle = .close
         return viewController
     }
+    
+    // MARK: SnackBars
+    
+    public func showErrorSnackBar(in superView: UIView, message: String, location: SnackBarLocation) {
+        let style = SnackBarStyle(
+            backgroundColor: colors.labelTertiaryVariant,
+            textColor: colors.labelPrimaryVariant,
+            buttonColor: nil
+        )
+        SnackBar.show(
+            in: superView,
+            message: message,
+            style: style,
+            location: location
+        )
+    }
 }

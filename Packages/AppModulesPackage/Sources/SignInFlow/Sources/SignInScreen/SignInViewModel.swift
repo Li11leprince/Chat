@@ -26,11 +26,12 @@ final class SignInViewModel: BaseViewModel<SignInContext.ViewEvent,
         viewState = .loading
         authService.signIn(email: email, password: password)
             .sink { [weak self] result in
+                self?.viewState = .loaded
                 switch result {
                 case .success():
                     self?.outputEventSubject.send(.didSignIn)
                 case .failure(let error):
-                    break
+                    self?.viewState = .error(error)
                 }
             }
             .store(in: &cancelableSet)

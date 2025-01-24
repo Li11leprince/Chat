@@ -2,6 +2,7 @@
 
 import Foundation
 import AppBaseFlow
+import AppEntities
 
 struct SignInContext {
     private init() {}
@@ -14,6 +15,8 @@ extension SignInContext {
     enum ViewState: Stubable {
         case initial
         case loading
+        case loaded
+        case error(AppError)
         
         static var stub: ViewState { .initial }
     }

@@ -12,7 +12,9 @@ struct AppContainer {
     fileprivate static let defaultJsonEncoder = JSONEncoder()
     fileprivate static let defaultJsonDecoder = JSONDecoder()
     @Injected(\.debugStorage) fileprivate static var debugStorage: DefaultsStorage
+    @Injected(\.defaultsStorage) fileprivate static var defautlsStorage: DefaultsStorage
     @Injected(\.memoryStorage) fileprivate static var memoryStorage: MemoryStorage
+    @Injected(\.passwordAuthProvide) fileprivate static var passwordAuthProvider: PasswordAuthProvider
 
 
     fileprivate static let networkLogQueue = DispatchQueue(
@@ -76,9 +78,20 @@ private struct AlamofireHttpClientKey: InjectionKey {
     }()
 }
 
+private struct PasswordAuthProviderKey: InjectionKey {
+    static var currentValue: PasswordAuthProvider = {
+        let authProvider: PasswordAuthProvider = FirebasePasswordAuthProvider()
+        
+        return authProvider
+    }()
+}
+
 private struct AuthServiceKey: InjectionKey {
     static var currentValue: AuthService = {
-        let authService: AuthService = FakeAuthServiceImpl(memoryStorage: AppContainer.memoryStorage)
+        let authService: AuthService = AuthServiceImpl(
+            authProvider: AppContainer.passwordAuthProvider,
+            defaultsStorage: AppContainer.defautlsStorage
+        )
         
         return authService
     }()
@@ -111,6 +124,10 @@ public extension InjectedValues {
         set { Self[AlamofireHttpClientKey.self] = newValue }
     }
     
+    var passwordAuthProvide: PasswordAuthProvider {
+        get { Self[PasswordAuthProviderKey.self] }
+        set { Self[PasswordAuthProviderKey.self] = newValue }
+    }
     var authService: AuthService {
         get { Self[AuthServiceKey.self] }
         set { Self[AuthServiceKey.self] = newValue }
