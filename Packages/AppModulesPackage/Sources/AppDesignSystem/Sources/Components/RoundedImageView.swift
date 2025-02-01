@@ -14,8 +14,6 @@ public class RoundedImageView: UIImageView {
     public func setup(colors: Colors, typography: Typography) {
         layer.cornerRadius = frame.height / 2
         clipsToBounds = true
-        layer.borderWidth = 1
-        layer.borderColor = colors.backgroundSecondary.cgColor
         contentMode = .center
     }
 }

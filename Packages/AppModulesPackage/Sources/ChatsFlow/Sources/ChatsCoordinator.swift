@@ -41,6 +41,18 @@ public final class ChatsCoordinator: BaseCoordinator, EventCoordinator {
 private extension ChatsCoordinator {
     
     func startChatsScreen(){
+        let viewModel = ChatsViewModel()
+        let vc = ChatsViewController(viewModel: viewModel)
         
+        viewModel.outputEventPublisher
+            .sink { [weak self] event in
+                switch event {
+                case .finish:
+                    break
+                }
+            }
+            .store(in: &setCancelable)
+        
+        navigationController?.setViewControllers([vc], animated: false)
     }
 }

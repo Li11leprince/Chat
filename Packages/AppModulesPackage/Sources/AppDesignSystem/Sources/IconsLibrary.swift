@@ -25,6 +25,10 @@ extension IconsLibrary {
     public var purpleEllipse: UIImage { valueOrStub("purple_ellipse") }
     public var appLogo: UIImage { valueOrStub("chatLogo") }
     public var backButton: UIImage { valueOrStub("back_button_icon") }
+    
+    // MARK: Mocks
+    
+    public var mockAvatar: UIImage { valueOrStub("mock_avatar") }
 }
 
 // SFSymbols Example

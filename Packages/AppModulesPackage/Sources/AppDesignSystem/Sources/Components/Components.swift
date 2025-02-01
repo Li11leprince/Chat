@@ -226,6 +226,13 @@ extension Components {
         return viewController
     }
     
+    public func makeBadgeView() -> BadgeView {
+        let view = BadgeView()
+        view.setup(colors: colors, typography: typography)
+        
+        return view
+    }
+    
     // MARK: SnackBars
     
     public func showErrorSnackBar(in superView: UIView, message: String, location: SnackBarLocation) {
