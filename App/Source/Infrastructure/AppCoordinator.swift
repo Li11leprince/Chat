@@ -31,7 +31,7 @@ final class AppCoordinator: BaseCoordinator, Coordinator {
         
         switch authService.authState {
         case .signedIn:
-            startHomeFlow()
+            startChatsFlow()
         case .signedUp:
             startSignInFlow()
         case .notRegistered:
@@ -63,7 +63,7 @@ private extension AppCoordinator {
             case .finish(let authState):
                 switch authState {
                 case .signedIn:
-                    self.startHomeFlow()
+                    self.startChatsFlow()
                     guard let coordinator = coordinator else { return }
                     self.removeDependency(coordinator)
                 case .signedUp:
@@ -90,7 +90,7 @@ private extension AppCoordinator {
                 guard let coordinator = coordinator else { return }
                 self.removeDependency(coordinator)
             case .finish:
-                self.startHomeFlow()
+                self.startChatsFlow()
                 break
             }
         }
@@ -98,8 +98,8 @@ private extension AppCoordinator {
         coordinator.start()
     }
 
-    private func startHomeFlow() {
-        let coordinator = HomeCoordinator(
+    private func startChatsFlow() {
+        let coordinator = HomeTabBarCoordinator(
             navigationController: navigationController
         )
         let token = coordinator.events.sink { _ in
@@ -128,7 +128,7 @@ private extension AppCoordinator {
     
     private func startOnboardingIfNeededOrHomeFlow() {
         if hasOnboardingCompleted() {
-            startHomeFlow()
+            startChatsFlow()
         } else {
             startOnboardingFlow()
         }

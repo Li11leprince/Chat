@@ -16,15 +16,19 @@ public struct IconsLibrary: SafeResource {
 // MARK: - App Icons
 
 extension IconsLibrary {
-    public var homeTabbarExplore: UIImage { valueOrStub("home_tabbar_explore") }
-    public var homeTabbarStore: UIImage { valueOrStub("home_tabbar_store") }
-    public var homeTabbarProfile: UIImage { valueOrStub("home_tabbar_profile") }
+    public var homeTabbarChats: UIImage { valueOrStub("home_tabbar_chats") }
+    public var homeTabbarSettings: UIImage { valueOrStub("home_tabbar_settings") }
+    public var homeTabbarContacts: UIImage { valueOrStub("home_tabbar_contacts") }
     public var appleIcon: UIImage { valueOrStub("apple_icon") }
     public var facebookIcon: UIImage { valueOrStub("facebook_icon") }
     public var googleIcon: UIImage { valueOrStub("google_icon") }
     public var purpleEllipse: UIImage { valueOrStub("purple_ellipse") }
     public var appLogo: UIImage { valueOrStub("chatLogo") }
     public var backButton: UIImage { valueOrStub("back_button_icon") }
+    
+    // MARK: Mocks
+    
+    public var mockAvatar: UIImage { valueOrStub("mock_avatar") }
 }
 
 // SFSymbols Example

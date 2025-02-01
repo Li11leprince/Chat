@@ -31,8 +31,10 @@ private let appModuleTargets: [Target.Dependency] = [
     makeModule(name: "AppBaseFlow"),
     makeModule(name: "AppServices"),
     makeModule(name: "SignInFlow"),
-    makeModule(name: "HomeFlow"),
-    makeModule(name: "SignUpFlow")
+    makeModule(name: "ChatsFlow"),
+    makeModule(name: "SignUpFlow"),
+    makeModule(name: "SettingsFlow"),
+    makeModule(name: "ContactsFlow")
 ]
 
 // MARK: - Package

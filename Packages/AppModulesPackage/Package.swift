@@ -327,14 +327,42 @@ enum InternalModules {
         ]
     )
 
-    static let homeFlowModule: AppModule = .makeModule(
-        name: "HomeFlow",
+    static let chatsFlowModule: AppModule = .makeModule(
+        name: "ChatsFlow",
         dependencies: [
             utilitiesModule,
             appDesignSystemModule,
             appEntitiesModule,
             appBaseFlowModule,
-            appServicesModule
+            appServicesModule,
+            ExternalModules.snapKit,
+            ExternalModules.tweeTextField
+        ]
+    )
+    
+    static let settignsFlowModule: AppModule = .makeModule(
+        name: "SettingsFlow",
+        dependencies: [
+            utilitiesModule,
+            appDesignSystemModule,
+            appEntitiesModule,
+            appBaseFlowModule,
+            appServicesModule,
+            ExternalModules.snapKit,
+            ExternalModules.tweeTextField
+        ]
+    )
+    
+    static let contactsFlowModule: AppModule = .makeModule(
+        name: "ContactsFlow",
+        dependencies: [
+            utilitiesModule,
+            appDesignSystemModule,
+            appEntitiesModule,
+            appBaseFlowModule,
+            appServicesModule,
+            ExternalModules.snapKit,
+            ExternalModules.tweeTextField
         ]
     )
 }
@@ -370,7 +398,9 @@ private let productAppModules: [AppModule] = [
     InternalModules.appServicesModule,
     InternalModules.signUpFlowModule,
     InternalModules.signInFlowModule,
-    InternalModules.homeFlowModule
+    InternalModules.chatsFlowModule,
+    InternalModules.settignsFlowModule,
+    InternalModules.contactsFlowModule
 ]
 
 /// Defines use of test modules for testing
