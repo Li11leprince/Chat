@@ -1,15 +1,15 @@
-//  
+//
 
 import Foundation
 import AppBaseFlow
 
-struct ChatsContext {
+struct ChatContext {
     private init() {}
 }
 
 // MARK: ViewState
 
-extension ChatsContext {
+extension ChatContext {
     enum ViewState: Stubable {
         case initial
         
@@ -19,19 +19,17 @@ extension ChatsContext {
 
 // MARK: ViewEvent
 
-extension ChatsContext {
+extension ChatContext {
     enum ViewEvent {
         case viewDidLoad
-        case chatPressed(id: String)
     }
 }
 
 // MARK: OutputEvent
 
-extension ChatsContext {
+extension ChatContext {
     enum OutputEvent {
         case finish
-        case chat(id: String)
     }
 }
 

@@ -58,6 +58,7 @@ extension Components {
 
     public var tabbarStandardAppearance: UITabBarAppearance {
         let appearance = UITabBarAppearance()
+        appearance.configureWithOpaqueBackground()
         appearance.stackedLayoutAppearance.normal.iconColor = colors.labelSecondary
         appearance.stackedLayoutAppearance.normal.titleTextAttributes = [
             .foregroundColor: colors.labelSecondary

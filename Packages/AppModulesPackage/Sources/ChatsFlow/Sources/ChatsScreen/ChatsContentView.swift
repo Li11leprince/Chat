@@ -8,7 +8,6 @@ extension ChatsContext {
     final class ContentView: BaseView {
         private(set) var chatsTableView: UITableView = {
             let tb = UITableView()
-//            tb.separatorStyle = .none
             return tb
         }()
         
