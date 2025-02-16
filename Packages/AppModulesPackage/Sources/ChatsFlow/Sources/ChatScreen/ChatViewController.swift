@@ -7,7 +7,7 @@ final class ChatViewController: BaseViewController<ChatViewModel,
                                  ChatContext.ViewEvent,
                                  ChatContext.ViewState,
                                  ChatContext.ContentView> {
-    private let maxMessageTextViewHeight: CGFloat = 80
+    private let maxMessageTextViewHeight: CGFloat = 150
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -25,6 +25,15 @@ final class ChatViewController: BaseViewController<ChatViewModel,
 
 extension ChatViewController: UITextViewDelegate {
     func textViewDidChange(_ textView: UITextView) {
+        if textView.frame.height > maxMessageTextViewHeight {
+            let height = textView.frame.height
+            textView.isScrollEnabled = true
+            textView.snp.updateConstraints { make in
+                make.height.greaterThanOrEqualTo(height)
+            }
+            return
+        }
+        
         UIView.animate(withDuration: 0.25) {
             self.view.layoutIfNeeded()
         }

@@ -47,22 +47,25 @@ extension ChatContext {
             bottomView.snp.makeConstraints { make in
                 make.bottom.equalToSuperview()
                 make.leading.trailing.equalToSuperview()
+                make.height.greaterThanOrEqualTo(70)
             }
             
             messageTextView.snp.makeConstraints { make in
                 make.top.equalToSuperview().inset(Paddings.topBottomViewInset)
                 make.leading.trailing.equalToSuperview().inset(40)
                 make.bottom.equalToSuperview().inset(38)
+                make.height.greaterThanOrEqualTo(Paddings.messageTextViewHeight)
             }
         }
     }
 }
 
 
-private extension ChatContext.ContentView {
+extension ChatContext.ContentView {
     enum Paddings {
         static let topBottomViewInset: CGFloat = 8.0
         static let messageTextViewHeight: CGFloat = 24.0
         static let messageTextViewCornerRadius: CGFloat = messageTextViewHeight / 2
+        static let messageTextViewTopBottomPaddingsWhenWriting: CGFloat = 8.0
     }
 }
