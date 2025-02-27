@@ -49,10 +49,29 @@ private extension ChatsCoordinator {
                 switch event {
                 case .finish:
                     break
+                case .chat(id: let id):
+                    self?.startChatScreen(chatId: id)
                 }
             }
             .store(in: &setCancelable)
         
         navigationController?.setViewControllers([vc], animated: false)
+    }
+    
+    func startChatScreen(chatId: String){
+        let viewModel = ChatViewModel()
+        let vc = ChatViewController(viewModel: viewModel)
+        
+        viewModel.outputEventPublisher
+            .sink { [weak self] event in
+                switch event {
+                case .finish:
+                    break
+                }
+            }
+            .store(in: &setCancelable)
+        
+        vc.hidesBottomBarWhenPushed = true
+        navigationController?.pushViewController(vc, animated: true)
     }
 }

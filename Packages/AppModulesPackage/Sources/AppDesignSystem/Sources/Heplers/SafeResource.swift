@@ -1,6 +1,7 @@
 //  Copyright © 2021 My organization. All rights reserved.
 
 import UIKit
+import Lottie
 
 /// Describes resources for loading within app like colors and images
 protocol AppResource {

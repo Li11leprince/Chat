@@ -218,6 +218,13 @@ enum ExternalModules {
             from: "11.6.0"
         )
     )
+    static let lottie = ExternalPackage(
+        productName: "Lottie",
+        dependency: .package(
+            url: "https://github.com/airbnb/lottie-spm.git",
+            from: "4.5.1"
+        )
+    )
 }
 
 // MARK: - External plugins
@@ -255,7 +262,8 @@ enum InternalModules {
             utilitiesModule,
             ExternalModules.tweeTextField,
             ExternalModules.progressHUD,
-            ExternalModules.rSwift
+            ExternalModules.rSwift,
+            ExternalModules.lottie
         ],
         plugins: [
             ExternalPlugins.rSwiftPlugin
@@ -336,7 +344,8 @@ enum InternalModules {
             appBaseFlowModule,
             appServicesModule,
             ExternalModules.snapKit,
-            ExternalModules.tweeTextField
+            ExternalModules.tweeTextField,
+            ExternalModules.lottie
         ]
     )
     
@@ -386,7 +395,8 @@ private let externalPackages: [ExternalPackage] = [
 //    ExternalModules.firebaseFirestore,
 //    ExternalModules.firebaseMessaging,
 //    ExternalModules.firebaseCrashlytics,
-    ExternalModules.firebaseCore
+    ExternalModules.firebaseCore,
+    ExternalModules.lottie
 ]
 
 /// Defines use of product modules to build tha app

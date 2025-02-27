@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		493F15B52D66D8D3007761CB /* Lottie in Frameworks */ = {isa = PBXBuildFile; productRef = 493F15B42D66D8D3007761CB /* Lottie */; };
 		496AB8482D3E6BF50063D95B /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 496AB8472D3E6BF50063D95B /* GoogleService-Info.plist */; };
 		49C7CEA42D43A4160091698A /* HomeTabBarCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49C7CEA32D43A4160091698A /* HomeTabBarCoordinator.swift */; };
 		5D9470F625DC348000DE488C /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 5D9470F525DC348000DE488C /* InfoPlist.strings */; };
@@ -56,6 +57,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				85D59EC32A2BC02900C2D91D /* UmbrellaPackage in Frameworks */,
+				493F15B52D66D8D3007761CB /* Lottie in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -185,6 +187,7 @@
 			name = ChatApp;
 			packageProductDependencies = (
 				85D59EC22A2BC02900C2D91D /* UmbrellaPackage */,
+				493F15B42D66D8D3007761CB /* Lottie */,
 			);
 			productName = ios;
 			productReference = 88D12C1A25AEC6C30001D30F /* ChatApp.app */;
@@ -215,6 +218,7 @@
 			);
 			mainGroup = 88D12C1125AEC6C30001D30F;
 			packageReferences = (
+				493F15B32D66D8D3007761CB /* XCRemoteSwiftPackageReference "lottie-spm" */,
 			);
 			productRefGroup = 88D12C1B25AEC6C30001D30F /* Products */;
 			projectDirPath = "";
@@ -660,7 +664,23 @@
 		};
 /* End XCConfigurationList section */
 
+/* Begin XCRemoteSwiftPackageReference section */
+		493F15B32D66D8D3007761CB /* XCRemoteSwiftPackageReference "lottie-spm" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/airbnb/lottie-spm.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 4.5.1;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
 /* Begin XCSwiftPackageProductDependency section */
+		493F15B42D66D8D3007761CB /* Lottie */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 493F15B32D66D8D3007761CB /* XCRemoteSwiftPackageReference "lottie-spm" */;
+			productName = Lottie;
+		};
 		85D59EC22A2BC02900C2D91D /* UmbrellaPackage */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = UmbrellaPackage;

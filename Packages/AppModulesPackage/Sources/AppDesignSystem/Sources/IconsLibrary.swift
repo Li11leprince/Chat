@@ -1,6 +1,7 @@
 //  Copyright © 2021 My organization. All rights reserved.
 
 import UIKit
+import Lottie
 
 public struct IconsLibrary: SafeResource {
 
@@ -10,6 +11,10 @@ public struct IconsLibrary: SafeResource {
 
     private func valueOrStub(_ image: UIImage?) -> UIImage {
         return image ?? stub
+    }
+    
+    private func lottie(_ name: String) -> LottieAnimationView {
+        return LottieAnimationView(name: name, bundle: .module)
     }
 }
 
@@ -29,6 +34,12 @@ extension IconsLibrary {
     // MARK: Mocks
     
     public var mockAvatar: UIImage { valueOrStub("mock_avatar") }
+}
+
+// MARK: - Backgrounds
+
+extension IconsLibrary {
+    public var chatBackground: UIImage { valueOrStub("chat_background")}
 }
 
 // SFSymbols Example
@@ -54,4 +65,10 @@ extension IconsLibrary {
         )
         return valueOrStub(image)
     }
+}
+
+// MARK: - Lottie
+
+extension IconsLibrary {
+    public var chatsIconLottie: LottieAnimationView { lottie("chat_icon_lottie") }
 }

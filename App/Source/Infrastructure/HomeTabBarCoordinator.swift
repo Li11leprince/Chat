@@ -22,6 +22,7 @@ public final class HomeTabBarCoordinator: BaseCoordinator, EventCoordinator {
     public var eventsCancelableToken: AnyCancellable?
 
     private var designSystem = appDesignSystem
+    private var components = appDesignSystem.components
 
     private var eventSubject: PassthroughSubject<Event, Never> = .init()
     private var setCancelable = Set<AnyCancellable>()
@@ -45,16 +46,14 @@ private extension HomeTabBarCoordinator {
     
     func initializeHomeTabBar(){
         let vc = UITabBarController()
-        vc.tabBar.standardAppearance = designSystem.components.tabbarStandardAppearance
+        vc.tabBar.standardAppearance = components.tabbarStandardAppearance
+        vc.tabBar.scrollEdgeAppearance = vc.tabBar.standardAppearance
 
-        let chatsNavigationController = UINavigationController()
-        chatsNavigationController.tabBarItem = designSystem.components.chatsTabBarItem
+        let chatsNavigationController = components.navigationController(tabBarItem: components.chatsTabBarItem)
         
-        let settingsNavigationController = UINavigationController()
-        settingsNavigationController.tabBarItem = designSystem.components.settingsTabBarItem
+        let settingsNavigationController = components.navigationController(tabBarItem: components.settingsTabBarItem)
         
-        let contactsNavigationController = UINavigationController()
-        contactsNavigationController.tabBarItem = designSystem.components.contactsTabBarItem
+        let contactsNavigationController = components.navigationController(tabBarItem: components.contactsTabBarItem)
         
         vc.viewControllers = [
             contactsNavigationController,

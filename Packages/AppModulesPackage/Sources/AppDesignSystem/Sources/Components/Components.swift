@@ -69,6 +69,13 @@ extension Components {
         ]
         return appearance
     }
+    
+    public func navigationController(tabBarItem: UITabBarItem) -> UINavigationController {
+        let nc = UINavigationController()
+        nc.tabBarItem = tabBarItem
+        nc.navigationBar.scrollEdgeAppearance = nc.navigationBar.standardAppearance
+        return nc
+    }
 }
 
 // MARK: - NavBar
@@ -76,8 +83,7 @@ extension Components {
 extension Components {
     public func navBarAppearance() {
         let appearance = UINavigationBar.appearance()
-        appearance.tintColor = colors.labelPrimary
-    }
+        appearance.tintColor = colors.labelPrimary    }
 }
 
 // MARK: - Common Components
