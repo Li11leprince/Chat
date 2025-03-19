@@ -18,6 +18,8 @@
 "common_done" = "Done";
 "common_use_open_settings" = "Open Settings";
 "common_or" = "Or";
+"common_online" = "online";
+"common_edit" = "Edit";
 
 // Common Errors
 "common_error" = "Error";
@@ -53,6 +55,15 @@
 
 // Settigns Screen Feature Strings
 "settings_settings" = "Settings";
+"settings_my_profile" = "My profile";
+
+// Profile Screen
+"profile_phone" = "phone";
+"profile_username" = "username";
+"profile_birthday" = "birthday";
+"profile_bio" = "bio";
+"profile_first_name" = "first name";
+"profile_last_name" = "last name";
 
 // Contacts Screen Feature Strings
 "contacts_contacts" = "Contacts";

@@ -65,6 +65,42 @@ extension IconsLibrary {
         )
         return valueOrStub(image)
     }
+    
+    public var person: UIImage {
+        let configuration = UIImage.SymbolConfiguration(weight: .medium)
+        let image = UIImage(
+            systemName: "person.crop.circle",
+            withConfiguration: configuration
+        )
+        return valueOrStub(image)
+    }
+    
+    public var pencil: UIImage {
+        let configuration = UIImage.SymbolConfiguration(weight: .medium)
+        let image = UIImage(
+            systemName: "pencil",
+            withConfiguration: configuration
+        )
+        return valueOrStub(image)
+    }
+    
+    public var checkmark: UIImage {
+        let configuration = UIImage.SymbolConfiguration(weight: .medium)
+        let image = UIImage(
+            systemName: "checkmark",
+            withConfiguration: configuration
+        )
+        return valueOrStub(image)
+    }
+    
+    public var eraser: UIImage {
+        let configuration = UIImage.SymbolConfiguration(weight: .medium)
+        let image = UIImage(
+            systemName: "eraser",
+            withConfiguration: configuration
+        )
+        return valueOrStub(image)
+    }
 }
 
 // MARK: - Lottie

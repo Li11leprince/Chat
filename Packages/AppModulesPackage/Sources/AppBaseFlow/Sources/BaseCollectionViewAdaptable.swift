@@ -29,12 +29,8 @@ public protocol TableViewAdaptable: UITableViewDelegate {
     typealias DataSource = UITableViewDiffableDataSource<Section, Item>
     typealias DataSourceSnapshot = NSDiffableDataSourceSnapshot<Section, Item>
 
-    var dataSource: DataSource? { get set }
-
     func registerCells(in tableView: UITableView)
     func setDataSource(in tableView: UITableView)
-
-    init(viewModel: ViewModel)
 }
 
 public protocol CollectionViewLayoutProvider {

@@ -16,6 +16,7 @@ final class ChatViewController: BaseViewController<ChatViewModel,
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        initializeHideKeyboard()
         bindActions()
         registerCells(in: contentView.chatCollectionView)
         setDataSource(in: contentView.chatCollectionView)
@@ -41,7 +42,6 @@ final class ChatViewController: BaseViewController<ChatViewModel,
     }
     
     private func bindActions() {
-        initializeHideKeyboard()
         contentView.sendMessageButton.touchUpInsidePublisher
             .sink { [weak self] in
                 guard let self,
@@ -66,18 +66,6 @@ final class ChatViewController: BaseViewController<ChatViewModel,
             .store(in: &cancelableSet)
     }
     
-    private func getCollectionViewContentInsets(
-        bounds: CGRect,
-        forScrollIndicator: Bool
-    ) -> UIEdgeInsets {
-        return UIEdgeInsets(
-            top: bounds.height + (forScrollIndicator ? 0 : 8),
-            left: 0,
-            bottom: self.contentView.safeAreaInsets.top + bounds.height + (forScrollIndicator ? 0 : 8),
-            right: 0
-        )
-    }
-    
     private func keyboardWillShow(notification: Notification) {
         let info = notification.userInfo!
         let frame = (info[UIResponder.keyboardFrameEndUserInfoKey] as! NSValue).cgRectValue
@@ -92,17 +80,6 @@ final class ChatViewController: BaseViewController<ChatViewModel,
         contentView.updateConstraintsWhenKeyboardHide()
         collectionView.contentInset.bottom = contentView.safeAreaInsets.top + 8
         collectionView.scrollIndicatorInsets = collectionView.contentInset
-    }
-    
-    private func initializeHideKeyboard() {
-        let tap: UITapGestureRecognizer = UITapGestureRecognizer(
-            target: self,
-            action: #selector(dismissKeyboard))
-        view.addGestureRecognizer(tap)
-    }
-    
-    @objc private func dismissKeyboard() {
-        view.endEditing(true)
     }
 }
 

@@ -49,7 +49,7 @@ extension Components {
     
     public var settingsTabBarItem: UITabBarItem {
         .init(
-            title: strings.settignsSettings,
+            title: strings.settingsSettings,
             image: icons.homeTabbarSettings,
             tag: 2
         )
@@ -70,10 +70,15 @@ extension Components {
         return appearance
     }
     
-    public func navigationController(tabBarItem: UITabBarItem) -> UINavigationController {
+    public func navigationController(
+        tabBarItem: UITabBarItem,
+        isScrollEdgeAppearanceDefault: Bool = false
+    ) -> UINavigationController {
         let nc = UINavigationController()
         nc.tabBarItem = tabBarItem
-        nc.navigationBar.scrollEdgeAppearance = nc.navigationBar.standardAppearance
+        if isScrollEdgeAppearanceDefault == false {
+            nc.navigationBar.scrollEdgeAppearance = nc.navigationBar.standardAppearance
+        }
         return nc
     }
 }
@@ -211,6 +216,12 @@ extension Components {
         button.titleFont = typography.caption1
 
         return button
+    }
+    
+    public var avatarWithName: AvatarWithNameView {
+        let view = AvatarWithNameView()
+        view.setup(typography: typography)
+        return view
     }
     
     public func makeRoundedView(bounds: CGRect, lineColor: UIColor, image: UIImage) -> UIView {
