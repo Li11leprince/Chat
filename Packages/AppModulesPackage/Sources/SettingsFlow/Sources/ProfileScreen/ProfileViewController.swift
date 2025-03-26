@@ -8,7 +8,7 @@ final class ProfileViewController: BaseViewController<ProfileViewModel,
                                                     ProfileContext.ViewState,
                                                     ProfileContext.ContentView> {
     
-    var dataSource: UITableViewDiffableDataSource<Section, Item>!
+    var dataSource: UITableViewDiffableDataSource<Section, Item>?
     
     private var tableView: UITableView { contentView.tableView }
     private var navBarContainerView: UIView!
@@ -17,32 +17,32 @@ final class ProfileViewController: BaseViewController<ProfileViewModel,
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        viewModel.onViewEvent(.viewDidLoad)
         bindActions()
         navigationItem.rightBarButtonItem = .init(customView: contentView.editButton)
         tableView.delegate = self
         registerCells(in: tableView)
         setDataSource(in: tableView)
+        viewModel.onViewEvent(.viewDidLoad)
     }
 
     override func onViewState(_ viewState: ProfileContext.ViewState) {
         switch viewState {
-        case .initial:
-            initial()
-        case .editing:
-            editingState()
+        case .initial(let model):
+            initial(model: model)
+        case .editing(let model):
+            editingState(model: model)
+        case .saved(let model):
+            savedState(model: model)
         }
     }
     
-    func initial() {
-        UIView.animate(withDuration: 0.2) {
-            self.contentView.cancelButton.alpha = 0.0
-            self.contentView.saveButton.alpha = 0.0
-        }
-        tableView.tableHeaderView?.frame.size.height = 170
+    func initial(model: UserDataModel) {
+        contentView.avatarWithName.setName(firstName: model.firstName, lastName: model.lastName)
+        contentView.avatarWithName.setImage(model.avatarImage ?? contentView.icons.mockAvatar)
+        applyInitialSnaphot(model: model)
     }
     
-    func editingState() {
+    func editingState(model: UserDataModel) {
         navigationItem.hidesBackButton = true
         navigationItem.rightBarButtonItem = .init(customView: contentView.saveButton)
         navigationItem.leftBarButtonItem = .init(customView: contentView.cancelButton)
@@ -54,7 +54,22 @@ final class ProfileViewController: BaseViewController<ProfileViewModel,
         tableView.tableHeaderView?.frame.size.height = 135
         contentView.avatarWithName.hideLabels()
         tableView.isUserInteractionEnabled = true
-        showEditState()
+        showEditState(model: model)
+    }
+    
+    func savedState(model: UserDataModel) {
+        navigationItem.hidesBackButton = false
+        navigationItem.rightBarButtonItem = .init(customView: contentView.editButton)
+        navigationItem.leftBarButtonItem = nil
+        UIView.animate(withDuration: 0.2) {
+            self.contentView.cancelButton.alpha = 0.0
+            self.contentView.saveButton.alpha = 0.0
+            self.contentView.changeAvatarButton.alpha = 0.0
+        }
+        tableView.tableHeaderView?.frame.size.height = 170
+        contentView.avatarWithName.showLabels()
+        contentView.avatarWithName.setName(firstName: model.firstName, lastName: model.lastName)
+        showSavedState()
     }
     
     private func bindActions() {
@@ -66,6 +81,11 @@ final class ProfileViewController: BaseViewController<ProfileViewModel,
         contentView.editButton.touchUpInsidePublisher
             .sink { [weak self] in
                 self?.viewModel.onViewEvent(.startEditing)
+            }
+            .store(in: &cancelableSet)
+        contentView.saveButton.touchUpInsidePublisher
+            .sink { [weak self] in
+                self?.viewModel.onViewEvent(.saveButtonPressed)
             }
             .store(in: &cancelableSet)
         contentView.changeAvatarButton.touchUpInsidePublisher
@@ -138,6 +158,7 @@ extension ProfileViewController: PHPickerViewControllerDelegate, TOCropViewContr
     
     func cropViewController(_ cropViewController: TOCropViewController, didCropToCircularImage image: UIImage, with cropRect: CGRect, angle: Int) {
         contentView.avatarWithName.setImage(image)
+        viewModel.saveItem(model: .init(type: .avatar, value: "", image: image))
         cropViewController.dismiss(animated: false) {
             self.pickerViewController?.dismiss(animated: true)
         }
@@ -148,8 +169,6 @@ extension ProfileViewController: PHPickerViewControllerDelegate, TOCropViewContr
         vc.toolbarPosition = .bottom
         vc.delegate = self
         vc.modalTransitionStyle = .crossDissolve
-//        present(vc, animated: true)
         picker.present(vc, animated: true)
-
     }
 }

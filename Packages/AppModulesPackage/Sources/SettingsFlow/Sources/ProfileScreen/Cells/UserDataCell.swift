@@ -8,7 +8,7 @@ import SnapKit
 class UserDataCell: BaseTableViewCell {
     var isDataEditing = false
     
-    var action: () -> Void = {}
+    var textChanged: ((String) -> Void)?
     
     private(set) lazy var titleLabel: UILabel = {
         let lbl = UILabel()
@@ -19,6 +19,7 @@ class UserDataCell: BaseTableViewCell {
     private(set) lazy var subtitleTextField: UITextField = {
         let tf = UITextField()
         tf.font = .systemFont(ofSize: 14)
+        tf.returnKeyType = .done
         tf.isEnabled = false
         return tf
     }()
@@ -41,6 +42,7 @@ class UserDataCell: BaseTableViewCell {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         setupLayout()
         subtitleTextField.delegate = self
+        subtitleTextField.addTarget(self, action: #selector(textFieldDidChange), for: .editingChanged)
     }
     
     required init?(coder: NSCoder) {
@@ -59,8 +61,6 @@ class UserDataCell: BaseTableViewCell {
     func setupHierarchy() {
         contentView.addSubview(titleLabel)
         contentView.addSubview(subtitleTextField)
-//        contentView.addSubview(editButton)
-//        contentView.addSubview(cancelEditButton)
     }
     
     func setupConstraints() {
@@ -73,26 +73,25 @@ class UserDataCell: BaseTableViewCell {
             make.top.equalTo(titleLabel.snp.bottom)
             make.bottom.equalToSuperview().inset(8)
         }
-//        editButton.snp.makeConstraints { make in
-//            make.trailing.equalToSuperview().inset(16)
-//            make.top.equalToSuperview().inset(8)
-//            make.width.height.equalTo(24)
-//        }
-//        cancelEditButton.snp.makeConstraints { make in
-//            make.trailing.equalTo(editButton.snp.leading).inset(-4)
-//            make.top.equalToSuperview().inset(8)
-//            make.width.height.equalTo(24)
-//        }
     }
     
     func didTapEdit() {
         subtitleTextField.isEnabled = true
         subtitleTextField.becomeFirstResponder()
     }
+    
+    @objc private func textFieldDidChange(_ textField: UITextField) {
+        textChanged?(textField.text ?? "")
+    }
 }
 
 extension UserDataCell: UITextFieldDelegate {
     func textFieldDidEndEditing(_ textField: UITextField) {
         textField.isEnabled = false
+    }
+    
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        textField.resignFirstResponder()
+        return true
     }
 }

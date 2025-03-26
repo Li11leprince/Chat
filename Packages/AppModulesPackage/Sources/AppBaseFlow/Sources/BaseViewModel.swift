@@ -47,6 +47,7 @@ open class BaseViewModel<ViewEvent, ViewState: Stubable, OutputEvent>: ViewModel
     public var cancelableSet: Set<AnyCancellable> = .init()
     
     public var strings = appDesignSystem.strings
+    public var icons = appDesignSystem.icons
 
     // MARK: - View Model Input
 

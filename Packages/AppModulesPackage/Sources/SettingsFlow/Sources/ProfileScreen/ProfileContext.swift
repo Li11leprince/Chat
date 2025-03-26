@@ -10,9 +10,10 @@ struct ProfileContext {
 
 extension ProfileContext {
     enum ViewState: Stubable {
-        case initial
-        case editing
-        static var stub: ViewState = .initial
+        case initial(UserDataModel)
+        case editing(UserDataModel)
+        case saved(UserDataModel)
+        static var stub: ViewState = .initial(UserDataModel.mock)
     }
 }
 
@@ -23,6 +24,7 @@ extension ProfileContext {
         case viewDidLoad
         case startEditing
         case cancelButtonPressed
+        case saveButtonPressed
     }
 }
 

@@ -4,13 +4,13 @@ import UIKit
 import AppDesignSystem
 
 struct UserDataModel: Hashable {
-    let firstName: String
-    let lastName: String
-    let userName: String
-    let phoneNumber: String
-    let avatarImage: UIImage?
-    let birthday: String
-    let bio: String
+    var firstName: String
+    var lastName: String
+    var userName: String
+    var phoneNumber: String
+    var avatarImage: UIImage?
+    var birthday: String
+    var bio: String
     
     static let mock = UserDataModel(
         firstName: "Анна",
@@ -23,11 +23,18 @@ struct UserDataModel: Hashable {
     )
 }
 
-enum UserDataItem: Hashable {
-    case firstName(String)
-    case lastName(String)
-    case phone(String)
-    case username(String)
-    case birthday(String)
-    case bio(String)
+struct UserDataItem: Hashable {
+    var type: InfoType
+    var value: String
+    var image: UIImage?
+}
+
+enum InfoType: Hashable {
+    case firstName
+    case lastName
+    case phone
+    case username
+    case avatar
+    case birthday
+    case bio
 }

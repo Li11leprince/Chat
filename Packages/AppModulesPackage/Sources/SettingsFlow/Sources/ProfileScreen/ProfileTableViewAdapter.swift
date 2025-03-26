@@ -20,51 +20,56 @@ extension ProfileViewController: TableViewAdaptable {
     
     func setDataSource(in tableView: UITableView) {
         dataSource = UITableViewDiffableDataSource<Section, Item>(tableView: tableView) { [weak self] tableView, indexPath, model in
-            switch model {
-            case .firstName(let firstName):
+            switch model.type {
+            case .firstName:
                 let cell = tableView.dequeue(FirstNameCell.self, indexPath: indexPath)
-                self?.bindToEditButton(tableView, cell)
-                cell.configure(firstName: firstName)
+                cell.textChanged = { [weak self] text in
+                    self?.updateProfileItem(type: .firstName, newValue: text)
+                }
+                cell.configure(firstName: model.value)
                 return cell
-            case .lastName(let lastName):
+            case .lastName:
                 let cell = tableView.dequeue(LastNameCell.self, indexPath: indexPath)
-                self?.bindToEditButton(tableView, cell)
-                cell.configure(lastName: lastName)
+                cell.textChanged = { [weak self] text in
+                    self?.updateProfileItem(type: .lastName, newValue: text)
+                }
+                cell.configure(lastName: model.value)
                 return cell
-            case .phone(let phone):
+            case .phone:
                 let cell = tableView.dequeue(PhoneCell.self, indexPath: indexPath)
-                self?.bindToEditButton(tableView, cell)
-                cell.configure(phone: phone)
+                cell.textChanged = { [weak self] text in
+                    self?.updateProfileItem(type: .phone, newValue: text)
+                }
+                cell.configure(phone: model.value)
                 return cell
-            case .username(let username):
+            case .username:
                 let cell = tableView.dequeue(UsernameCell.self, indexPath: indexPath)
-                self?.bindToEditButton(tableView, cell)
-                cell.configure(username: username)
+                cell.textChanged = { [weak self] text in
+                    self?.updateProfileItem(type: .username, newValue: text)
+                }
+                cell.configure(username: model.value)
                 return cell
-            case .birthday(let birthday):
+            case .birthday:
                 let cell = tableView.dequeue(BirthdayCell.self, indexPath: indexPath)
-                self?.bindToEditButton(tableView, cell)
-                cell.configure(birthday: birthday)
+                cell.textChanged = { [weak self] text in
+                    self?.updateProfileItem(type: .birthday, newValue: text)
+                }
+                cell.configure(birthday: model.value)
                 return cell
-            case .bio(let bio):
+            case .bio:
                 let cell = tableView.dequeue(BioCell.self, indexPath: indexPath)
-                self?.bindToEditButton(tableView, cell)
-                cell.configure(bio: bio)
+                cell.textChanged = { [weak self] text in
+                    self?.updateProfileItem(type: .bio, newValue: text)
+                }
+                cell.configure(bio: model.value)
                 return cell
+            case .avatar:
+                return nil
             }
         }
         
-        var snapshot = DataSourceSnapshot()
-        snapshot.appendSections([1])
-        let user = UserDataModel.mock
-        let items: [UserDataItem] = [
-            .phone(user.phoneNumber),
-            .username(user.userName),
-            .birthday(user.birthday),
-            .bio(user.bio)
-        ]
-        snapshot.appendItems(items, toSection: 1)
-        dataSource.apply(snapshot)
+        let snapshot = DataSourceSnapshot()
+        dataSource?.apply(snapshot)
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -81,25 +86,50 @@ extension ProfileViewController: TableViewAdaptable {
         tableView.endUpdates()
     }
     
-    private func bindToEditButton(_ tableView: UITableView, _ cell: UserDataCell) {
-        cell.editButton.touchUpInsidePublisher
-            .sink {
-                tableView.beginUpdates()
-                cell.didTapEdit()
-                tableView.endUpdates()
-            }
-            .store(in: &cancelableSet)
+    func showEditState(model: UserDataModel) {
+        guard var snapshot = dataSource?.snapshot() else {
+            return
+        }
+        let items: [UserDataItem] = [
+            UserDataItem(type: .firstName, value: model.firstName),
+            UserDataItem(type: .lastName, value: model.lastName)
+        ]
+        snapshot.insertSections([0], beforeSection: 1)
+        snapshot.appendItems(items, toSection: 0)
+        dataSource?.apply(snapshot, animatingDifferences: true)
     }
     
-    func showEditState() {
-        var snapshot = dataSource.snapshot()
-        snapshot.insertSections([0], beforeSection: 1)
-        let user = UserDataModel.mock
+    func showSavedState() {
+        guard var snapshot = dataSource?.snapshot() else {
+            return
+        }
+        snapshot.deleteSections([0])
+        dataSource?.apply(snapshot, animatingDifferences: true)
+    }
+    
+    func applyInitialSnaphot(model: UserDataModel) {
+        guard var snapshot = dataSource?.snapshot() else {
+            return
+        }
         let items: [UserDataItem] = [
-            .firstName(user.firstName),
-            .lastName(user.lastName)
+            UserDataItem(type: .phone, value: model.phoneNumber),
+            UserDataItem(type: .username, value: model.userName),
+            UserDataItem(type: .birthday, value: model.birthday),
+            UserDataItem(type: .bio, value: model.bio)
         ]
-        snapshot.appendItems(items, toSection: 0)
-        dataSource.apply(snapshot, animatingDifferences: true)
+        snapshot.appendSections([1])
+        snapshot.appendItems(items, toSection: 1)
+        dataSource?.apply(snapshot)
+    }
+    
+    private func updateProfileItem(type: InfoType, newValue: String) {
+        let item = UserDataItem(type: type, value: newValue)
+        viewModel.saveItem(model: item)
+        guard var snapshot = dataSource?.snapshot() else {
+            return
+        }
+//        snapshot.applyChanges { snapshot in
+//            snapshot.
+//        }
     }
 }

@@ -67,15 +67,26 @@ public class AvatarWithNameView: UIView {
         subtitleLabel.text = subtitle
     }
     
-    public func hideLabels(duration: Double = 0.15) {
+    public func hideLabels(duration: Double = 0.2) {
         UIView.animate(withDuration: duration) {
             self.nameLabel.alpha = 0.0
             self.subtitleLabel.alpha = 0.0
         }
     }
     
+    public func showLabels(duration: Double = 0.2) {
+        UIView.animate(withDuration: duration) {
+            self.nameLabel.alpha = 1.0
+            self.subtitleLabel.alpha = 1.0
+        }
+    }
+    
     public func setImage(_ image: UIImage) {
         avatarImageView.image = image
+    }
+    
+    public func setName(firstName: String, lastName: String?) {
+        nameLabel.text = "\(firstName)\((lastName != nil) ? " \(lastName!)" : "")"
     }
     
     func setup(typography: Typography) {
