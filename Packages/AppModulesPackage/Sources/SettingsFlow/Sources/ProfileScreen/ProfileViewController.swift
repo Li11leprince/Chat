@@ -2,6 +2,7 @@ import UIKit
 import PhotosUI
 import AppBaseFlow
 import TOCropViewController
+import Supabase
 
 final class ProfileViewController: BaseViewController<ProfileViewModel,
                                                     ProfileContext.ViewEvent,
@@ -14,6 +15,10 @@ final class ProfileViewController: BaseViewController<ProfileViewModel,
     private var navBarContainerView: UIView!
     private var pickerViewController: PHPickerViewController?
     private var chosenPhotoId: String?
+    let client = SupabaseClient(
+        supabaseURL: URL(string: "https://srkadqrsczrgzqluprpw.supabase.co")!,
+        supabaseKey: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNya2FkcXJzY3pyZ3pxbHVwcnB3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDI5OTYyMDUsImV4cCI6MjA1ODU3MjIwNX0.yaiva2snDursvyOR-QCTTeuHpU_wSd8jnq9A2suVnRA"
+    )
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -158,6 +163,11 @@ extension ProfileViewController: PHPickerViewControllerDelegate, TOCropViewContr
     
     func cropViewController(_ cropViewController: TOCropViewController, didCropToCircularImage image: UIImage, with cropRect: CGRect, angle: Int) {
         contentView.avatarWithName.setImage(image)
+        Task {
+            if let url = await uploadFileToStorage(image: image) {
+                await downloadFileFromStorage(url: url)
+            }
+        }
         viewModel.saveItem(model: .init(type: .avatar, value: "", image: image))
         cropViewController.dismiss(animated: false) {
             self.pickerViewController?.dismiss(animated: true)
@@ -170,5 +180,44 @@ extension ProfileViewController: PHPickerViewControllerDelegate, TOCropViewContr
         vc.delegate = self
         vc.modalTransitionStyle = .crossDissolve
         picker.present(vc, animated: true)
+    }
+    
+    func uploadFileToStorage(image: UIImage) async -> URL? {
+        do {
+            guard let imageData = image.jpegData(compressionQuality: 0.8) else {
+                return nil
+            }
+            
+            // Доступ к bucket "avatars" (замените на свой bucket)
+            let fileName = "profile-\(UUID().uuidString).jpg"
+            let bucket = client.storage.from("media")
+            
+            // Загрузка файла в bucket
+            try await bucket.upload(
+                fileName,
+                data: imageData
+            )
+            
+            print("File uploaded successfully at path: \(fileName)")
+            
+            return try bucket.getPublicURL(path: fileName)
+        } catch {
+            print("Error uploading file: \(error.localizedDescription)")
+            return nil
+        }
+    }
+    
+    func downloadFileFromStorage(url: URL) async {
+        do {
+            let imageData = try await URLSession.shared.data(for: .init(url: url, method: .get))
+            print("File downloaded: \(imageData.0.count) bytes")
+            
+            if let image = UIImage(data: imageData.0) {
+                // Отобразите изображение в UIImageView или обработайте его
+                print("Image downloaded successfully")
+            }
+        } catch {
+            print("Error downloading file: \(error.localizedDescription)")
+        }
     }
 }
