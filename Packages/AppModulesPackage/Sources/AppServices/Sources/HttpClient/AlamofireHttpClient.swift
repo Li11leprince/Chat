@@ -4,6 +4,7 @@ import Foundation
 import Alamofire
 import Combine
 import AppEntities
+import Utilities
 
 public class AlamofireHttpClient {
     private let session: Session

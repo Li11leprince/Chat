@@ -1,17 +1,17 @@
 {
   "images" : [
     {
-      "filename" : "char_background.jpg",
+      "filename" : "chat_background 2.jpg",
       "idiom" : "universal",
       "scale" : "1x"
     },
     {
-      "filename" : "char_background 1.jpg",
+      "filename" : "chat_background.jpg",
       "idiom" : "universal",
       "scale" : "2x"
     },
     {
-      "filename" : "char_background 2.jpg",
+      "filename" : "chat_background 1.jpg",
       "idiom" : "universal",
       "scale" : "3x"
     }

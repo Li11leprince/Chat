@@ -30,6 +30,8 @@ extension IconsLibrary {
     public var purpleEllipse: UIImage { valueOrStub("purple_ellipse") }
     public var appLogo: UIImage { valueOrStub("chatLogo") }
     public var backButton: UIImage { valueOrStub("back_button_icon") }
+    public var crossIcon: UIImage { valueOrStub("cross_icon") }
+    public var sendMessageIcon: UIImage { valueOrStub("send_message_icon") }
     
     // MARK: Mocks
     
@@ -40,6 +42,7 @@ extension IconsLibrary {
 
 extension IconsLibrary {
     public var chatBackground: UIImage { valueOrStub("chat_background")}
+    public var chatBackgroundDark: UIImage { valueOrStub("chat_background_dark") }
 }
 
 // SFSymbols Example

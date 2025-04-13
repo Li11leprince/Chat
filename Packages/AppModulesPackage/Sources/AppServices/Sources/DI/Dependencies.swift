@@ -21,7 +21,7 @@ struct AppContainer {
         label: "\(InfoPlist.bundleId).networkLogQueue"
     )
 
-    @Injected(\.alamofireHttpClient) fileprivate static var alamofireHttpClient: AlamofireHttpClient
+//    @Injected(\.alamofireHttpClient) fileprivate static var alamofireHttpClient: AlamofireHttpClient
     private init() {}
 }
 
@@ -70,13 +70,13 @@ private struct DebugStorageKey: InjectionKey {
     }()
 }
 
-private struct AlamofireHttpClientKey: InjectionKey {
-    static var currentValue: AlamofireHttpClient = {
-        let httpClient: AlamofireHttpClient = .init()
-        
-        return httpClient
-    }()
-}
+//private struct AlamofireHttpClientKey: InjectionKey {
+//    static var currentValue: AlamofireHttpClient = {
+//        let httpClient: AlamofireHttpClient = .init(urlSessionConfiguration: <#URLSessionConfiguration#>, requestInterceptor: <#any RequestInterceptor#>, eventMonitors: <#[any EventMonitor]#>)
+//        
+//        return httpClient
+//    }()
+//}
 
 private struct PasswordAuthProviderKey: InjectionKey {
     static var currentValue: PasswordAuthProvider = {
@@ -119,10 +119,10 @@ public extension InjectedValues {
         set { Self[DebugStorageKey.self] = newValue }
     }
     
-    var alamofireHttpClient: AlamofireHttpClient {
-        get { Self[AlamofireHttpClientKey.self] }
-        set { Self[AlamofireHttpClientKey.self] = newValue }
-    }
+//    var alamofireHttpClient: AlamofireHttpClient {
+//        get { Self[AlamofireHttpClientKey.self] }
+//        set { Self[AlamofireHttpClientKey.self] = newValue }
+//    }
     
     var passwordAuthProvide: PasswordAuthProvider {
         get { Self[PasswordAuthProviderKey.self] }

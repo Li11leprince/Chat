@@ -8,6 +8,10 @@ import Combine
 
 class TextMessageCell: BaseCollectionViewCell {
     
+    var onReply: ((String) -> Void)?
+    
+    private var isFeedbackHappened = false
+    
     private lazy var bubbleView: UIView = {
         let view = UIView()
         view.clipsToBounds = true
@@ -42,6 +46,7 @@ class TextMessageCell: BaseCollectionViewCell {
     override init(frame: CGRect) {
         super.init(frame: frame)
         setupLayout()
+        setupGesture()
     }
     
     required init?(coder: NSCoder) {
@@ -127,4 +132,59 @@ struct TextMessageCellModel: Hashable {
         }
         return data
     }()
+}
+
+extension TextMessageCell {
+    private func setupGesture() {
+        let panGesture = UIPanGestureRecognizer(target: self, action: #selector(handlePan(_:)))
+        panGesture.delegate = self
+        contentView.addGestureRecognizer(panGesture)
+    }
+    
+    @objc private func handlePan(_ gesture: UIPanGestureRecognizer) {
+        let translation = gesture.translation(in: contentView)
+        let velocity = gesture.velocity(in: contentView)
+        let criticalPoint: CGFloat = -50
+        
+        switch gesture.state {
+        case .began, .changed:
+            // Ограничиваем свайп только влево
+            if translation.x < 0 {
+                contentView.frame.origin.x = max(translation.x, -65)
+            }
+            let shouldTriggerAction = contentView.frame.origin.x <= criticalPoint || velocity.x < -500
+            if shouldTriggerAction && isFeedbackHappened == false {
+                isFeedbackHappened = true
+                let feedbackGenerator = UIImpactFeedbackGenerator(style: .medium)
+                feedbackGenerator.impactOccurred()
+            }
+        case .ended, .cancelled:
+            isFeedbackHappened = false
+            let shouldTriggerAction = contentView.frame.origin.x <= criticalPoint || velocity.x < -500
+            if shouldTriggerAction {
+                onReply?(messageLabel.text ?? "")
+                UIView.animate(withDuration: 0.2) {
+                    self.contentView.frame.origin.x = 0
+                }
+            } else {
+                UIView.animate(withDuration: 0.2) {
+                    self.contentView.frame.origin.x = 0
+                }
+            }
+            
+        default:
+            break
+        }
+    }
+}
+
+extension TextMessageCell: UIGestureRecognizerDelegate {
+    override func gestureRecognizerShouldBegin(_ gestureRecognizer: UIGestureRecognizer) -> Bool {
+        if let panGesture = gestureRecognizer as? UIPanGestureRecognizer {
+            let translation = panGesture.translation(in: contentView)
+            // Разрешаем только горизонтальные свайпы
+            return abs(translation.x) > abs(translation.y)
+        }
+        return true
+    }
 }

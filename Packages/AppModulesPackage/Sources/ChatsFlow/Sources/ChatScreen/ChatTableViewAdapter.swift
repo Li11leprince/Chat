@@ -13,6 +13,9 @@ extension ChatViewController: CollectionViewAdaptable, UICollectionViewDelegateF
         dataSource = UICollectionViewDiffableDataSource<Section, Item>(collectionView: collectionView) { collectionView, indexPath, message in
             let cell = collectionView.dequeue(TextMessageCell.self, indexPath: indexPath)
             cell.configure(model: message)
+            cell.onReply = { [weak self] text in
+                self?.bottomView.showReplyToView(text: text, person: "Anna")
+            }
             return cell
         }
         
