@@ -59,7 +59,7 @@ final class ReplyToView: BaseView {
     
     func setupConstraints() {
         separateVerticalLine.snp.makeConstraints { make in
-            make.leading.equalToSuperview().inset(44)
+            make.leading.equalToSuperview().inset(50)
             make.top.bottom.equalToSuperview()
             make.width.equalTo(2)
         }

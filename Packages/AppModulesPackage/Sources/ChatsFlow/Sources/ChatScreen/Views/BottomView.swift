@@ -15,7 +15,7 @@ final class BottomView: BaseView {
     
     private(set) lazy var messageTextView: UITextView = {
         let tv = UITextView()
-        tv.textContainerInset = UIEdgeInsets(top: 4, left: 4, bottom: 4, right: 4)
+        tv.textContainerInset = UIEdgeInsets(top: 4, left: 8, bottom: 4, right: 8)
         tv.isScrollEnabled = false
         tv.textContainer.lineBreakMode = .byWordWrapping
         tv.font = typography.subheadline
