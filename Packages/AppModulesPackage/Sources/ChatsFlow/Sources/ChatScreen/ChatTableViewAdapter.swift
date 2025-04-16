@@ -12,7 +12,10 @@ extension ChatViewController: CollectionViewAdaptable, UICollectionViewDelegateF
     
     func setDataSource(in collectionView: UICollectionView) {
         dataSource = UICollectionViewDiffableDataSource<Section, Item>(collectionView: collectionView) { collectionView, indexPath, message in
-            return self.bindTextCell(collectionView, indexPath, message)
+            switch message {
+            case .plainText(let model):
+                return self.bindTextCell(collectionView, indexPath, model)
+            }
         }
         
         var snapshot = NSDiffableDataSourceSnapshot<Section, Item>()
@@ -20,17 +23,15 @@ extension ChatViewController: CollectionViewAdaptable, UICollectionViewDelegateF
         dataSource.apply(snapshot, animatingDifferences: false)
     }
     
-    func addNewMessage(_ text: String, isMe: Bool) {
-        let message = Message(id: String(describing: UUID()), timestamp: 423, messageType: .plainText, text: text, thumb: nil, from: nil, isRead: false, redirectedMessages: [], attachments: [], reactions: [], replyTo: nil, isChanged: false)
-//        TextMessageCellModel.mock.append(newMessage)
-        
+    func addNewMessages(_ messages: [MessageCellModel]) {
         var snapshot = dataSource.snapshot()
         if snapshot.itemIdentifiers.isEmpty {
-            snapshot.appendItems([message])
+            snapshot.appendItems(messages)
         } else {
-            snapshot.insertItems([message], beforeItem: snapshot.itemIdentifiers[0])
+            snapshot.insertItems(messages, beforeItem: snapshot.itemIdentifiers[0])
         }
         dataSource.apply(snapshot, animatingDifferences: true)
+        bottomView.hideReplyToView()
     }
     
 //    private func bindReplyCell(
@@ -54,20 +55,21 @@ extension ChatViewController: CollectionViewAdaptable, UICollectionViewDelegateF
     private func bindTextCell(
         _ collectionView: UICollectionView,
         _ indexPath: IndexPath,
-        _ message: Message
+        _ model: TextMessageCellModel
     ) -> TextMessageCell {
         let cell = collectionView.dequeue(TextMessageCell.self, indexPath: indexPath)
-        let model: TextMessageCellModel = .init(isMe: true, id: message.id, time: "15:54", text: message.text, isRead: message.isRead, reactions: message.reactions, isChanged: message.isChanged, replyTo: .init(id: "fsd", name: "Anna", text: "I love you"))
         cell.configure(model: model)
-        cell.onReply = { [weak self] text in
-            self?.bottomView.showReplyToView(text: text, person: "Anna")
+        cell.onReply = { [weak self] model in
+            guard case .plainText(let model) = model else { return }
+            self?.bottomView.showReplyToView(text: model.text, person: model.from.displayName)
+            self?.viewModel.onViewEvent(.replyTo(.plainText(model)))
         }
         return cell
     }
     
     typealias Section = Int
     
-    typealias Item = Message
+    typealias Item = MessageCellModel
     
     typealias ViewModel = ChatViewModel
 }

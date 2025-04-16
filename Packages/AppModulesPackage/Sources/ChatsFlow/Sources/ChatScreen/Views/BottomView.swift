@@ -110,7 +110,7 @@ final class BottomView: BaseView {
         sendMessageButton.snp.makeConstraints { make in
             make.bottom.equalTo(messageTextView.snp.bottom)
             make.leading.equalTo(messageTextView.snp.trailing).inset(-4)
-            make.width.height.equalTo(28)
+            make.width.height.equalTo(30)
         }
     }
 }

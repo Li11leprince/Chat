@@ -8,7 +8,7 @@ import Combine
 
 class TextMessageCell: BaseCollectionViewCell {
     
-    var onReply: ((String) -> Void)?
+    var onReply: ((MessageCellModel?) -> Void)?
     
     private var isFeedbackHappened = false
     
@@ -38,15 +38,6 @@ class TextMessageCell: BaseCollectionViewCell {
         return RepliedMessageView()
     }()
     
-    private(set) lazy var verticalStackView: UIStackView = {
-        let stackView = UIStackView(arrangedSubviews: [messageLabel])
-        stackView.axis = .vertical
-        stackView.alignment = .fill
-        stackView.spacing = 4
-        
-        return stackView
-    }()
-    
     //    private lazy var isReadImageView: UIImageView = {
     //        let im = UIImageView()
     //        im.image =
@@ -56,6 +47,8 @@ class TextMessageCell: BaseCollectionViewCell {
     private var cancellableSet: Set<AnyCancellable> = []
     
     private let maxBubbleWidth: CGFloat = UIScreen.main.bounds.width * 0.7
+    
+    private var model: MessageCellModel?
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -80,26 +73,30 @@ class TextMessageCell: BaseCollectionViewCell {
         let totalWidth = textSize.width + timeSize.width + 4
         
         if totalWidth <= maxTextWidth {
-            verticalStackView.snp.remakeConstraints { make in
-                make.leading.top.bottom.equalToSuperview().inset(padding)
+            messageLabel.snp.remakeConstraints { make in
+                make.top.equalToSuperview().inset(padding).priority(.low)
+                make.leading.bottom.equalToSuperview().inset(padding)
+                make.trailing.equalTo(timeLabel.snp.leading).inset(-4)
             }
+            
             timeLabel.snp.remakeConstraints { make in
-                make.leading.equalTo(verticalStackView.snp.trailing).inset(-4)
-                make.bottom.equalToSuperview().inset(6)
                 make.trailing.equalTo(bubbleView.snp.trailing).inset(padding)
+                make.bottom.equalToSuperview().inset(4)
             }
         } else if textSize.width.truncatingRemainder(dividingBy: maxTextWidth) <= maxTextWidth {
-            verticalStackView.snp.remakeConstraints { make in
-                make.leading.top.trailing.equalToSuperview().inset(padding)
+            messageLabel.snp.remakeConstraints { make in
+                make.top.equalToSuperview().inset(padding).priority(.low)
+                make.leading.trailing.equalToSuperview().inset(padding)
             }
             timeLabel.snp.remakeConstraints { make in
-                make.top.equalTo(verticalStackView.snp.bottom).inset(-2)
+                make.top.equalTo(messageLabel.snp.bottom).inset(-2)
                 make.bottom.equalToSuperview().inset(4)
                 make.trailing.equalTo(bubbleView.snp.trailing).inset(padding)
             }
         } else {
-            verticalStackView.snp.remakeConstraints { make in
-                make.edges.equalToSuperview().inset(padding)
+            messageLabel.snp.remakeConstraints { make in
+                make.top.equalToSuperview().inset(padding).priority(.low)
+                make.leading.bottom.trailing.equalToSuperview().inset(padding)
             }
             timeLabel.snp.remakeConstraints { make in
                 make.bottom.equalToSuperview().inset(8)
@@ -116,8 +113,7 @@ class TextMessageCell: BaseCollectionViewCell {
     
     func setupHierarchy() {
         contentView.addSubview(bubbleView)
-//        bubbleView.addSubview(messageLabel)
-        bubbleView.addSubview(verticalStackView)
+        bubbleView.addSubview(messageLabel)
         bubbleView.addSubview(timeLabel)
     }
     
@@ -128,47 +124,28 @@ class TextMessageCell: BaseCollectionViewCell {
             make.bottom.equalToSuperview()
         }
         
-        verticalStackView.snp.makeConstraints { make in
-            make.leading.top.bottom.equalToSuperview().inset(8)
+        messageLabel.snp.makeConstraints { make in
+            make.top.equalToSuperview().inset(8).priority(.low)
+            make.leading.bottom.equalToSuperview().inset(8)
+            make.trailing.equalTo(timeLabel.snp.leading).inset(-4)
         }
         
         timeLabel.snp.makeConstraints { make in
-            make.leading.equalTo(verticalStackView.snp.trailing).inset(-4)
-            make.bottom.equalToSuperview().inset(6)
             make.trailing.equalTo(bubbleView.snp.trailing).inset(8)
+            make.bottom.equalToSuperview().inset(4)
         }
-        
-        
-//        messageLabel.snp.makeConstraints { make in
-//            make.leading.top.bottom.equalToSuperview().inset(8)
-//            make.trailing.equalTo(timeLabel.snp.leading).inset(-4)
-//        }
-//
-//        timeLabel.snp.makeConstraints { make in
-//            make.trailing.equalTo(bubbleView.snp.trailing).inset(8)
-//            make.bottom.equalToSuperview().inset(4)
-//        }
-        
-//        messageLabel.snp.remakeConstraints { make in
-//            make.top.equalTo(repliedMessageView.snp.bottom).inset(-8)
-//            make.leading.bottom.equalToSuperview().inset(8)
-//            make.trailing.equalTo(timeLabel.snp.leading).inset(-4)
-//        }
-        
-//        repliedMessageView.snp.makeConstraints { make in
-//            make.leading.trailing.top.equalToSuperview().inset(8)
-//        }
     }
     
     // MARK: - Конфигурация ячейки
+    
     func configure(model: TextMessageCellModel) {
+        self.model = .plainText(model)
         messageLabel.text = model.text
         timeLabel.text = model.time
         
-//        if let replyTo = model.replyTo {
-//            repliedMessageView.setup(name: replyTo.name, text: replyTo.text)
-//            verticalStackView.insertArrangedSubview(repliedMessageView, at: 0)
-//        }
+        if let replyTo = model.replyTo {
+            setupRepliedMessageView(replyTo)
+        }
         
         bubbleView.backgroundColor = model.isMe ? colors.backgroundTertiary : colors.backgroundPrimary
         timeLabel.textColor = model.isMe ? colors.labelSecondaryVariant2 : colors.labelSecondary
@@ -184,6 +161,16 @@ class TextMessageCell: BaseCollectionViewCell {
             } else {
                 make.leading.equalToSuperview().inset(10)
             }
+        }
+    }
+    
+    private func setupRepliedMessageView(_ replyTo: RepliedMessage) {
+        repliedMessageView.setup(name: replyTo.from.displayName, text: replyTo.text)
+        bubbleView.addSubview(repliedMessageView)
+        repliedMessageView.snp.makeConstraints { make in
+            make.top.equalToSuperview().inset(8)
+            make.leading.trailing.equalToSuperview().inset(8)
+            make.bottom.equalTo(messageLabel.snp.top).inset(-8)
         }
     }
 }
@@ -216,7 +203,7 @@ extension TextMessageCell {
             isFeedbackHappened = false
             let shouldTriggerAction = contentView.frame.origin.x <= criticalPoint || velocity.x < -500
             if shouldTriggerAction {
-                onReply?(messageLabel.text ?? "")
+                onReply?(model)
                 UIView.animate(withDuration: 0.2) {
                     self.contentView.frame.origin.x = 0
                 }
@@ -241,41 +228,4 @@ extension TextMessageCell: UIGestureRecognizerDelegate {
         }
         return true
     }
-}
-
-
-struct TextMessageCellModel: Hashable {
-    let isMe: Bool
-    let id: String
-    let time: String
-    let text: String
-//    let from: UserProfile
-    let isRead: Bool
-    let reactions: [Reaction]
-    let isChanged: Bool
-    let replyTo: RepliedMessageModel?
-    
-    static var mock: [TextMessageCellModel] = {
-        var data: [TextMessageCellModel] = []
-        for i in 0...10 {
-            data.append(TextMessageCellModel(
-                isMe: true,
-                id: String(i),
-                time: "12:05",
-                text: String("Text\(i)"),
-                //                from: UserProfl,
-                isRead: true,
-                reactions: [],
-                isChanged: false,
-                replyTo: nil
-            ))
-        }
-        return data
-    }()
-}
-
-struct RepliedMessageModel: Hashable {
-    let id: String
-    let name: String
-    let text: String
 }

@@ -3,19 +3,19 @@ import Foundation
 
 public struct Message: Hashable {
     public let id: String
-    public let timestamp: Int
+    public let timestamp: Double
     public let messageType: MessageType
     public let text: String
     public let thumb: URL?
-    public let from: UserProfile?
+    public let from: UserProfile
     public let isRead: Bool
     public let redirectedMessages: [Message]
     public let attachments: [Attachment]
     public let reactions: [Reaction]
-    public let replyTo: RepliedToMessage?
+    public let replyTo: RepliedMessage?
     public let isChanged: Bool
     
-    public init(id: String, timestamp: Int, messageType: MessageType, text: String, thumb: URL?, from: UserProfile?, isRead: Bool, redirectedMessages: [Message], attachments: [Attachment], reactions: [Reaction], replyTo: RepliedToMessage?, isChanged: Bool) {
+    public init(id: String, timestamp: Double, messageType: MessageType, text: String, thumb: URL?, from: UserProfile, isRead: Bool, redirectedMessages: [Message], attachments: [Attachment], reactions: [Reaction], replyTo: RepliedMessage?, isChanged: Bool) {
         self.id = id
         self.timestamp = timestamp
         self.messageType = messageType
@@ -31,12 +31,20 @@ public struct Message: Hashable {
     }
 }
 
-public struct RepliedToMessage: Hashable {
+public struct RepliedMessage: Hashable {
     public let id: String
     public let messageType: MessageType
     public let text: String
     public let from: UserProfile
     public let attachments: [Attachment]
+    
+    public init(id: String, messageType: MessageType, text: String, from: UserProfile, attachments: [Attachment]) {
+        self.id = id
+        self.messageType = messageType
+        self.text = text
+        self.from = from
+        self.attachments = attachments
+    }
 }
 
 public struct Reaction: Hashable {

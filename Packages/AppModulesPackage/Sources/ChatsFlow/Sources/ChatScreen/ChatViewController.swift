@@ -30,8 +30,8 @@ final class ChatViewController: BaseViewController<ChatViewModel,
         switch viewState {
         case .initial:
             initial()
-        case .newMessage(let message):
-            addNewMessage(message, isMe: true)
+        case .newMessages(let messages):
+            addNewMessages(messages)
         }
     }
     
@@ -58,6 +58,7 @@ final class ChatViewController: BaseViewController<ChatViewModel,
         bottomView.replyToView.closeButton.touchUpInsidePublisher
             .sink { [weak self] in
                 self?.bottomView.hideReplyToView()
+                self?.viewModel.onViewEvent(.replyTo(nil))
             }
             .store(in: &cancelableSet)
         NotificationCenter.default.publisher(for: UIResponder.keyboardWillShowNotification)

@@ -97,6 +97,12 @@ private struct AuthServiceKey: InjectionKey {
     }()
 }
 
+private struct DateFormatterServiceKey: InjectionKey {
+    static var currentValue: DateFormatting = {
+        return DefaultDateFormatterService()
+    }()
+}
+
 //MARK: Dependecy Paths
 public extension InjectedValues {
     var env: Env {
@@ -131,5 +137,10 @@ public extension InjectedValues {
     var authService: AuthService {
         get { Self[AuthServiceKey.self] }
         set { Self[AuthServiceKey.self] = newValue }
+    }
+    
+    var dateFormatter: DateFormatting {
+        get { Self[DateFormatterServiceKey.self] }
+        set { Self[DateFormatterServiceKey.self] = newValue }
     }
 }
