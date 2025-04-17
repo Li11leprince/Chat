@@ -62,47 +62,7 @@ class TextMessageCell: BaseCollectionViewCell {
     
     override func layoutSubviews() {
         super.layoutSubviews()
-        
-        let padding: CGFloat = 8
-        let maxTextWidth = maxBubbleWidth - padding * 2
-        
-        // Размер текста
-        let textSize = messageLabel.sizeThatFits(CGSize(width: maxTextWidth, height: .greatestFiniteMagnitude))
-        let timeSize = timeLabel.sizeThatFits(.zero)
-        
-        let totalWidth = textSize.width + timeSize.width + 4
-        
-        if totalWidth <= maxTextWidth {
-            messageLabel.snp.remakeConstraints { make in
-                make.top.equalToSuperview().inset(padding).priority(.low)
-                make.leading.bottom.equalToSuperview().inset(padding)
-                make.trailing.equalTo(timeLabel.snp.leading).inset(-4)
-            }
-            
-            timeLabel.snp.remakeConstraints { make in
-                make.trailing.equalTo(bubbleView.snp.trailing).inset(padding)
-                make.bottom.equalToSuperview().inset(4)
-            }
-        } else if textSize.width.truncatingRemainder(dividingBy: maxTextWidth) <= maxTextWidth {
-            messageLabel.snp.remakeConstraints { make in
-                make.top.equalToSuperview().inset(padding).priority(.low)
-                make.leading.trailing.equalToSuperview().inset(padding)
-            }
-            timeLabel.snp.remakeConstraints { make in
-                make.top.equalTo(messageLabel.snp.bottom).inset(-2)
-                make.bottom.equalToSuperview().inset(4)
-                make.trailing.equalTo(bubbleView.snp.trailing).inset(padding)
-            }
-        } else {
-            messageLabel.snp.remakeConstraints { make in
-                make.top.equalToSuperview().inset(padding).priority(.low)
-                make.leading.bottom.trailing.equalToSuperview().inset(padding)
-            }
-            timeLabel.snp.remakeConstraints { make in
-                make.bottom.equalToSuperview().inset(8)
-                make.trailing.equalTo(bubbleView.snp.trailing).inset(padding)
-            }
-        }
+        layoutMessageInfo()
     }
     
     
@@ -133,6 +93,61 @@ class TextMessageCell: BaseCollectionViewCell {
         timeLabel.snp.makeConstraints { make in
             make.trailing.equalTo(bubbleView.snp.trailing).inset(8)
             make.bottom.equalToSuperview().inset(4)
+        }
+    }
+    
+    private func layoutMessageInfo() {
+        let padding: CGFloat = 8
+        let maxTextWidth = maxBubbleWidth - padding * 2
+        
+        // Размер текста
+        let textSize = messageLabel.sizeThatFits(CGSize(width: maxTextWidth, height: .greatestFiniteMagnitude))
+        let timeSize = timeLabel.sizeThatFits(.zero)
+        
+        let totalWidth = textSize.width + timeSize.width + 4
+        
+        if totalWidth <= maxTextWidth {
+            layoutMessageInfoInOneLineWithText(padding)
+        } else if textSize.width.truncatingRemainder(dividingBy: maxTextWidth) <= maxTextWidth {
+            layoutMessageInfoUnderText(padding)
+        } else {
+            layoutMessageInfoInOneLineWithLastTextLine(padding)
+        }
+    }
+    
+    private func layoutMessageInfoInOneLineWithText(_ padding: CGFloat) {
+        messageLabel.snp.remakeConstraints { make in
+            make.top.equalToSuperview().inset(padding).priority(.low)
+            make.leading.bottom.equalToSuperview().inset(padding)
+            make.trailing.equalTo(timeLabel.snp.leading).inset(-4)
+        }
+        
+        timeLabel.snp.remakeConstraints { make in
+            make.trailing.equalTo(bubbleView.snp.trailing).inset(padding)
+            make.bottom.equalToSuperview().inset(4)
+        }
+    }
+    
+    private func layoutMessageInfoUnderText(_ padding: CGFloat) {
+        messageLabel.snp.remakeConstraints { make in
+            make.top.equalToSuperview().inset(padding).priority(.low)
+            make.leading.trailing.equalToSuperview().inset(padding)
+        }
+        timeLabel.snp.remakeConstraints { make in
+            make.top.equalTo(messageLabel.snp.bottom).inset(-2)
+            make.bottom.equalToSuperview().inset(4)
+            make.trailing.equalTo(bubbleView.snp.trailing).inset(padding)
+        }
+    }
+    
+    private func layoutMessageInfoInOneLineWithLastTextLine(_ padding: CGFloat) {
+        messageLabel.snp.remakeConstraints { make in
+            make.top.equalToSuperview().inset(padding).priority(.low)
+            make.leading.bottom.trailing.equalToSuperview().inset(padding)
+        }
+        timeLabel.snp.remakeConstraints { make in
+            make.bottom.equalToSuperview().inset(8)
+            make.trailing.equalTo(bubbleView.snp.trailing).inset(padding)
         }
     }
     
