@@ -30,6 +30,8 @@ extension IconsLibrary {
     public var purpleEllipse: UIImage { valueOrStub("purple_ellipse") }
     public var appLogo: UIImage { valueOrStub("chatLogo") }
     public var backButton: UIImage { valueOrStub("back_button_icon") }
+    public var crossIcon: UIImage { valueOrStub("cross_icon") }
+    public var sendMessageIcon: UIImage { valueOrStub("send_message_icon") }
     
     // MARK: Mocks
     
@@ -40,6 +42,7 @@ extension IconsLibrary {
 
 extension IconsLibrary {
     public var chatBackground: UIImage { valueOrStub("chat_background")}
+    public var chatBackgroundDark: UIImage { valueOrStub("chat_background_dark") }
 }
 
 // SFSymbols Example
@@ -61,6 +64,42 @@ extension IconsLibrary {
         let configuration = UIImage.SymbolConfiguration(weight: .medium)
         let image = UIImage(
             systemName: "chevron.right",
+            withConfiguration: configuration
+        )
+        return valueOrStub(image)
+    }
+    
+    public var person: UIImage {
+        let configuration = UIImage.SymbolConfiguration(weight: .medium)
+        let image = UIImage(
+            systemName: "person.crop.circle",
+            withConfiguration: configuration
+        )
+        return valueOrStub(image)
+    }
+    
+    public var pencil: UIImage {
+        let configuration = UIImage.SymbolConfiguration(weight: .medium)
+        let image = UIImage(
+            systemName: "pencil",
+            withConfiguration: configuration
+        )
+        return valueOrStub(image)
+    }
+    
+    public var checkmark: UIImage {
+        let configuration = UIImage.SymbolConfiguration(weight: .medium)
+        let image = UIImage(
+            systemName: "checkmark",
+            withConfiguration: configuration
+        )
+        return valueOrStub(image)
+    }
+    
+    public var eraser: UIImage {
+        let configuration = UIImage.SymbolConfiguration(weight: .medium)
+        let image = UIImage(
+            systemName: "eraser",
             withConfiguration: configuration
         )
         return valueOrStub(image)

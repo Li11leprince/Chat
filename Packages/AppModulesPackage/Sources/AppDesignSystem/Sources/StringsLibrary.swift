@@ -36,6 +36,8 @@ extension StringsLibrary {
     public var commonDone: String { localized("common_done") }
     public var commonOpenSettings: String { localized("common_use_open_settings") }
     public var commonOr: String { localized("common_or") }
+    public var commonOnline: String { localized("common_online") }
+    public var commonEdit: String { localized("common_edit") }
 
     // MARK: - Common Errors
 
@@ -82,8 +84,18 @@ extension StringsLibrary {
     
     // MARK: - Settings
 
-    public var settignsSettings: String { localized("settings_settings") }
+    public var settingsSettings: String { localized("settings_settings") }
+    public var settingsMyProfile: String { localized("settings_my_profile") }
     
+    // MARK: - Profile
+    
+    public var profilePhone: String { localized("profile_phone") }
+    public var profileUsername: String { localized("profile_username") }
+    public var profileBirthday: String { localized("profile_birthday") }
+    public var profileBio: String { localized("profile_bio") }
+    public var firstName: String { localized("profile_first_name") }
+    public var lastName: String { localized("profile_last_name") }
+
     
     // MARK: - Contacts
 

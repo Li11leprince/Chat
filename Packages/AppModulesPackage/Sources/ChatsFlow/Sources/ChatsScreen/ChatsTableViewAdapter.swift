@@ -11,14 +11,6 @@ extension ChatsViewController: TableViewAdaptable, UITableViewDataSource {
     
     typealias ViewModel = ChatsViewModel
     
-    var dataSource: DataSource? {
-        get {
-            nil
-        }
-        set(newValue) {
-            print("fds")
-        }
-    }
     
     func registerCells(in tableView: UITableView) {
         print("flsd")

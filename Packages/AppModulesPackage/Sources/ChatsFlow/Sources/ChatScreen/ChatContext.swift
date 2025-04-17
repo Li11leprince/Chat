@@ -12,7 +12,7 @@ struct ChatContext {
 extension ChatContext {
     enum ViewState: Stubable {
         case initial
-        case newMessage(String)
+        case newMessages([MessageCellModel])
         
         static var stub: ViewState = .initial
     }
@@ -24,6 +24,7 @@ extension ChatContext {
     enum ViewEvent {
         case viewDidLoad
         case messageButtonClicked(String)
+        case replyTo(MessageCellModel?)
     }
 }
 

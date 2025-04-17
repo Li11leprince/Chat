@@ -41,7 +41,39 @@ public final class SettingsCoordinator: BaseCoordinator, EventCoordinator {
 private extension SettingsCoordinator {
     
     func startSettingsScreen(){
+        let viewModel = SettingsViewModel()
+        let vc = SettingsViewController(viewModel: viewModel)
         
+        viewModel.outputEventPublisher
+            .sink { [weak self] event in
+                switch event {
+                case .finish:
+                    break
+                case .goToSetting(let setting):
+                    if setting == SettingModel.myProfile {
+                        self?.startProfileScreen()
+                    }
+                }
+            }
+            .store(in: &setCancelable)
+        
+        navigationController?.setViewControllers([vc], animated: false)
+    }
+    
+    func startProfileScreen(){
+        let viewModel = ProfileViewModel()
+        let vc = ProfileViewController(viewModel: viewModel)
+        
+        viewModel.outputEventPublisher
+            .sink { [weak self] event in
+                switch event {
+                case .finish:
+                    self?.navigationController?.popViewController(animated: true)
+                }
+            }
+            .store(in: &setCancelable)
+        
+        navigationController?.pushViewController(vc, animated: true)
     }
 }
 

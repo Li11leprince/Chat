@@ -225,6 +225,21 @@ enum ExternalModules {
             from: "4.5.1"
         )
     )
+    static let toCropViewController = ExternalPackage(
+        productName: "TOCropViewController",
+        dependency: .package(
+            url: "https://github.com/TimOliver/TOCropViewController.git",
+            from: "2.7.4"
+        )
+    )
+    static let supabase = ExternalPackage(
+        productName: "Supabase",
+        packageName: "supabase-swift",
+        dependency: .package(
+            url: "https://github.com/supabase/supabase-swift.git",
+            from: "2.26.0"
+        )
+    )
 }
 
 // MARK: - External plugins
@@ -262,8 +277,7 @@ enum InternalModules {
             utilitiesModule,
             ExternalModules.tweeTextField,
             ExternalModules.progressHUD,
-            ExternalModules.rSwift,
-            ExternalModules.lottie
+            ExternalModules.rSwift
         ],
         plugins: [
             ExternalPlugins.rSwiftPlugin
@@ -306,6 +320,14 @@ enum InternalModules {
         resourcePath: "JsonFakes",
         dependencies: [appServicesModule]
     )
+    static let appCommonDomain: AppModule = .makeModule(
+        name: "AppCommonDomain",
+        dependencies: [
+            utilitiesModule,
+            appEntitiesModule,
+            appServicesModule
+        ]
+    )
 
     // MARK: - Feature Flows
     
@@ -344,8 +366,7 @@ enum InternalModules {
             appBaseFlowModule,
             appServicesModule,
             ExternalModules.snapKit,
-            ExternalModules.tweeTextField,
-            ExternalModules.lottie
+            ExternalModules.tweeTextField
         ]
     )
     
@@ -358,7 +379,9 @@ enum InternalModules {
             appBaseFlowModule,
             appServicesModule,
             ExternalModules.snapKit,
-            ExternalModules.tweeTextField
+            ExternalModules.tweeTextField,
+            ExternalModules.toCropViewController,
+            ExternalModules.supabase
         ]
     )
     
@@ -396,7 +419,8 @@ private let externalPackages: [ExternalPackage] = [
 //    ExternalModules.firebaseMessaging,
 //    ExternalModules.firebaseCrashlytics,
     ExternalModules.firebaseCore,
-    ExternalModules.lottie
+    ExternalModules.toCropViewController,
+    ExternalModules.supabase
 ]
 
 /// Defines use of product modules to build tha app
@@ -406,6 +430,7 @@ private let productAppModules: [AppModule] = [
     InternalModules.appEntitiesModule,
     InternalModules.appBaseFlowModule,
     InternalModules.appServicesModule,
+    InternalModules.appCommonDomain,
     InternalModules.signUpFlowModule,
     InternalModules.signInFlowModule,
     InternalModules.chatsFlowModule,

@@ -51,7 +51,7 @@ private extension HomeTabBarCoordinator {
 
         let chatsNavigationController = components.navigationController(tabBarItem: components.chatsTabBarItem)
         
-        let settingsNavigationController = components.navigationController(tabBarItem: components.settingsTabBarItem)
+        let settingsNavigationController = components.navigationController(tabBarItem: components.settingsTabBarItem, isScrollEdgeAppearanceDefault: true)
         
         let contactsNavigationController = components.navigationController(tabBarItem: components.contactsTabBarItem)
         

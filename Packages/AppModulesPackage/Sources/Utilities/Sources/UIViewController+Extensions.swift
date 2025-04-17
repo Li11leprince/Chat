@@ -25,4 +25,15 @@ extension UIViewController {
         actions.forEach(alertController.addAction(_:))
         return alertController
     }
+    
+    public func initializeHideKeyboard() {
+        let tap: UITapGestureRecognizer = UITapGestureRecognizer(
+            target: self,
+            action: #selector(dismissKeyboard))
+        view.addGestureRecognizer(tap)
+    }
+        
+    @objc private func dismissKeyboard() {
+        view.endEditing(true)
+    }
 }

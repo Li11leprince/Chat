@@ -11,11 +11,13 @@ final class ChatViewController: BaseViewController<ChatViewModel,
     var dataSource: UICollectionViewDiffableDataSource<Section, Item>!
     
     var collectionView: UICollectionView { contentView.chatCollectionView }
+    var bottomView: BottomView { contentView.bottomView }
     
     private typealias Paddings = ChatContext.ContentView.Paddings
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        initializeHideKeyboard()
         bindActions()
         registerCells(in: contentView.chatCollectionView)
         setDataSource(in: contentView.chatCollectionView)
@@ -28,30 +30,35 @@ final class ChatViewController: BaseViewController<ChatViewModel,
         switch viewState {
         case .initial:
             initial()
-        case .newMessage(let message):
-            addNewMessage(message, isMe: true)
+        case .newMessages(let messages):
+            addNewMessages(messages)
         }
     }
     
     private func initial() {
         collectionView.delegate = self
-        contentView.messageTextView.delegate = self
+        bottomView.messageTextView.delegate = self
         
         navigationItem.title = "Анечка❤️"
     }
     
     private func bindActions() {
-        initializeHideKeyboard()
-        contentView.sendMessageButton.touchUpInsidePublisher
+        bottomView.sendMessageButton.touchUpInsidePublisher
             .sink { [weak self] in
                 guard let self,
-                      let text = contentView.messageTextView.text,
+                      let text = bottomView.messageTextView.text,
                     text != "" else {
                     return
                 }
                 self.viewModel.onViewEvent(.messageButtonClicked(text))
-                self.contentView.messageTextView.text = ""
-                self.textViewDidChange(contentView.messageTextView)
+                self.bottomView.messageTextView.text = ""
+                self.textViewDidChange(bottomView.messageTextView)
+            }
+            .store(in: &cancelableSet)
+        bottomView.replyToView.closeButton.touchUpInsidePublisher
+            .sink { [weak self] in
+                self?.bottomView.hideReplyToView()
+                self?.viewModel.onViewEvent(.replyTo(nil))
             }
             .store(in: &cancelableSet)
         NotificationCenter.default.publisher(for: UIResponder.keyboardWillShowNotification)
@@ -66,43 +73,20 @@ final class ChatViewController: BaseViewController<ChatViewModel,
             .store(in: &cancelableSet)
     }
     
-    private func getCollectionViewContentInsets(
-        bounds: CGRect,
-        forScrollIndicator: Bool
-    ) -> UIEdgeInsets {
-        return UIEdgeInsets(
-            top: bounds.height + (forScrollIndicator ? 0 : 8),
-            left: 0,
-            bottom: self.contentView.safeAreaInsets.top + bounds.height + (forScrollIndicator ? 0 : 8),
-            right: 0
-        )
-    }
-    
     private func keyboardWillShow(notification: Notification) {
         let info = notification.userInfo!
         let frame = (info[UIResponder.keyboardFrameEndUserInfoKey] as! NSValue).cgRectValue
         contentView.containerView.frame.origin.y = -frame.height
-        contentView.updateConstraintsWhenKeyboardShow()
+        bottomView.updateConstraintsWhenKeyboardShow()
         collectionView.contentInset.bottom = frame.height + contentView.safeAreaInsets.top + 8
         collectionView.scrollIndicatorInsets = collectionView.contentInset
     }
     
     private func keyboardWillHide() {
         contentView.containerView.frame.origin.y = 0
-        contentView.updateConstraintsWhenKeyboardHide()
+        bottomView.updateConstraintsWhenKeyboardHide()
         collectionView.contentInset.bottom = contentView.safeAreaInsets.top + 8
         collectionView.scrollIndicatorInsets = collectionView.contentInset
-    }
-    
-    private func initializeHideKeyboard() {
-        let tap: UITapGestureRecognizer = UITapGestureRecognizer(
-            target: self,
-            action: #selector(dismissKeyboard))
-        view.addGestureRecognizer(tap)
-    }
-    
-    @objc private func dismissKeyboard() {
-        view.endEditing(true)
     }
 }
 

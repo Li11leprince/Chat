@@ -41,4 +41,16 @@ extension Formatter {
 
         return String(format: "%0.2d:%0.2d", minutes, seconds)
     }
+    
+    public func formatDateToString(_ date: Date, pattern: String = "dd.MM.yyyy") -> String {
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = pattern
+        return dateFormatter.string(from: date)
+    }
+    
+    public func formatStringToDate(_ string: String, pattern: String = "dd.MM.yyyy") -> Date? {
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = pattern
+        return dateFormatter.date(from: string)
+    }
 }

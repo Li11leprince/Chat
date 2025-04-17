@@ -11,6 +11,8 @@ open class BaseTableViewCell: UITableViewCell {
     public let colors = appDesignSystem.colors
     public let strings = appDesignSystem.strings
     public let typography = appDesignSystem.typography
+    public let icons = appDesignSystem.icons
+    public let formatter = appDesignSystem.formatter
 
 //    private(set) lazy var genericCellView: UIView = makeCellView()
 //

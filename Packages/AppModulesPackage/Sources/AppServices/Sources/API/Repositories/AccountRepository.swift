@@ -2,7 +2,6 @@
 //
 //import Foundation
 //import AppEntities
-//import AppServices
 //import Combine
 //import UIKit
 //import AppBaseFlow
@@ -153,7 +152,7 @@
 //
 //// MARK: - Network Payload
 //
-//private struct UserProfilePayload: Payloadable {
+//private struct UserProfilePayload: Decodable {
 //    let id: String
 //    let firstName: String?
 //    let lastName: String?
@@ -162,13 +161,13 @@
 //    let avatar: ImagePayload?
 //}
 //
-//private struct ImageInfoPayload: Payloadable {
+//private struct ImageInfoPayload: Decodable {
 //    let width: Int?
 //    let height: Int?
 //    let url: String?
 //}
 //
-//private struct ImagePayload: Payloadable {
+//private struct ImagePayload: Decodable {
 //    let small: ImageInfoPayload?
 //    let medium: ImageInfoPayload?
 //    let original: ImageInfoPayload?

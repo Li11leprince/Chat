@@ -45,9 +45,10 @@ extension Account {
         public let updatedAt: Date
         public let firstName: String
         public let lastName: String
-        public let displayName: String
+        public let userName: String
         public let phoneNumber: String
         public let avatarImage: Image?
+        public let bio: String
 
         public init(
             id: String,
@@ -55,18 +56,20 @@ extension Account {
             updatedAt: Date,
             firstName: String,
             lastName: String,
-            displayName: String,
+            userName: String,
             phoneNumber: String,
-            avatarImage: Image?
+            avatarImage: Image?,
+            bio: String
         ) {
             self.id = id
             self.createdAt = createdAt
             self.updatedAt = updatedAt
             self.firstName = firstName
             self.lastName = lastName
-            self.displayName = displayName
+            self.userName = userName
             self.phoneNumber = phoneNumber
             self.avatarImage = avatarImage
+            self.bio = bio
         }
 
         public static var stub: Profile {
@@ -76,9 +79,10 @@ extension Account {
                 updatedAt: Date(),
                 firstName: "",
                 lastName: "",
-                displayName: "",
+                userName: "",
                 phoneNumber: "",
-                avatarImage: nil
+                avatarImage: nil,
+                bio: ""
             )
         }
     }
