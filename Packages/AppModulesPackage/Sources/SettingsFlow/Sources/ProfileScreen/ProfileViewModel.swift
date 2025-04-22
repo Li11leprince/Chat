@@ -59,7 +59,7 @@ final class ProfileViewModel: BaseViewModel<ProfileContext.ViewEvent,
         viewState = .saved(userDataModel)
         if let imageData = userDataModel.avatarImage?.jpegData(compressionQuality: 0.7) {
             let fileName = "profile-\(UUID().uuidString).jpg"
-            mediaContentRepository.uploadData(imageData, fileName: fileName)
+            mediaContentRepository.uploadFile(imageData, fileName: fileName)
                 .sink { result in
                     switch result {
                     case .progress(let progress):

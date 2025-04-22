@@ -47,6 +47,7 @@ public class AlamofireHttpClient {
     
     public func sendUploadFile<Payload: Decodable>(
         _ request: FileRequest,
+        payloadType: Payload.Type,
         headers: [String: String]
     ) -> AnyPublisher<UploadProgressOrResult<Payload>, Never> {
         
@@ -137,8 +138,16 @@ extension DataRequest {
         let resultPublisher =
         self
             .validate(statusCode: 200..<500)
-            .publishDecodable(type: Payload.self, queue: DispatchQueue.global(qos: .utility))
+            .publishDecodable(
+                type: Payload.self,
+                queue: DispatchQueue.global(qos: .utility)
+            )
             .value()
+            .mapError { (afError: AFError) -> AppError in
+                
+                let error = AppError.network(causedByError: afError)
+                return error
+            }
             .map { value in
                 UploadProgressOrResult.success(value)
             }
@@ -146,8 +155,16 @@ extension DataRequest {
                 let appError = AppError.network(causedByError: error)
                 return Just(.failure(appError))
             }
-        return progressSubject
-            .append(resultPublisher)
+        return resultPublisher
+            .combineLatest(progressSubject)
+            .map({ (result, progress) in
+                if case .progress(let progress) = progress {
+                    if progress == 1.0 {
+                        return result
+                    }
+                }
+                return progress
+            })
             .receive(on: DispatchQueue.main)
             .eraseToAnyPublisher()
     }

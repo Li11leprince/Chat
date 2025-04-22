@@ -6,7 +6,7 @@ import AppEntities
 
 final public class MediaContentRepository {
     
-    typealias UploadFileResult = UploadProgressOrResult<String>
+    public typealias UploadFileResult = UploadProgressOrResult<String>
 //    typealias UploadAvatarResult = Result<Image, AppError>
     
     private let httpClient: AlamofireHttpClient
@@ -25,10 +25,10 @@ final public class MediaContentRepository {
         self.networkMapper = networkMapper
     }
     
-    public func uploadData(
+    public func uploadFile(
         _ data: Data,
         fileName: String
-    ) -> AnyPublisher<UploadProgressOrResult<String>, Never> {
+    ) -> AnyPublisher<UploadFileResult, Never> {
         let headers = [
             "Authorization": "Bearer \(token)",
             "Content-Type": "application/octet-stream"
@@ -36,9 +36,10 @@ final public class MediaContentRepository {
         let publisher = httpClient
             .sendUploadFile(
                 requestFactory.putFileToStorage(data, fileName: fileName),
+                payloadType: UploadFilePayload.self,
                 headers: headers
             )
-            .flatMap { [weak self] (result: UploadProgressOrResult<String>) -> Just<UploadFileResult> in
+            .flatMap { [weak self] (result: UploadProgressOrResult<UploadFilePayload>) -> Just<UploadFileResult> in
 
                 guard let self = self else {
                     return Just<UploadFileResult>(
@@ -54,20 +55,36 @@ final public class MediaContentRepository {
     }
 }
 
+// MARK: - Payload types
+
+struct UploadFilePayload: Decodable {
+    let Key: String
+    let Id : String
+}
+
 // MARK: - Handling Response
 
 private extension MediaContentRepository {
     
     func handleUploadFileResponse(
-        result: UploadProgressOrResult<String>
+        result: UploadProgressOrResult<UploadFilePayload>
     ) -> Just<UploadFileResult> {
         switch result {
-        case .progress(let double):
-            return Just(UploadFileResult.progress(double))
         case .success(let payload):
-            return Just(UploadFileResult.success(payload))
+            let url = networkMapper.publicFileUrl(from: payload)
+            return Just(UploadFileResult.success(url))
         case .failure(let appError):
             return Just(UploadFileResult.failure(appError))
+        case .progress(let progress):
+            return Just(UploadFileResult.progress(progress))
         }
+    }
+}
+
+// MARK: - Mapper
+
+extension NetworkMapper {
+    fileprivate func publicFileUrl(from payload: UploadFilePayload) -> String {
+        return "\(InfoPlist.apiMediaStorage)/public/\(payload.Key)"
     }
 }
