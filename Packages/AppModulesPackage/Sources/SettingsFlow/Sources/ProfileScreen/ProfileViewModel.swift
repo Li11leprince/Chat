@@ -1,11 +1,14 @@
 import Foundation
 import AppBaseFlow
+import AppServices
 
 final class ProfileViewModel: BaseViewModel<ProfileContext.ViewEvent,
                             ProfileContext.ViewState,
                             ProfileContext.OutputEvent> {
     
     var isEditing: Bool = false
+    
+    @Injected(\.mediaContentRepository) private var mediaContentRepository: MediaContentRepository
     
     private lazy var userDataModel: UserDataModel = {
         UserDataModel.mock
@@ -54,5 +57,20 @@ final class ProfileViewModel: BaseViewModel<ProfileContext.ViewEvent,
     
     private func saveButtonPressed() {
         viewState = .saved(userDataModel)
+        if let imageData = userDataModel.avatarImage?.jpegData(compressionQuality: 0.7) {
+            let fileName = "profile-\(UUID().uuidString).jpg"
+            mediaContentRepository.uploadData(imageData, fileName: fileName)
+                .sink { result in
+                    switch result {
+                    case .progress(let progress):
+                        print("AAAA \(progress)")
+                    case .success(let url):
+                        print("AAAA \(url)")
+                    case .failure(let failure):
+                        print("AAAA \(failure)")
+                    }
+                }
+                .store(in: &cancelableSet)
+        }
     }
 }

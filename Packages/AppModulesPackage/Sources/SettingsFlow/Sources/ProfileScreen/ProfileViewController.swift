@@ -163,11 +163,11 @@ extension ProfileViewController: PHPickerViewControllerDelegate, TOCropViewContr
     
     func cropViewController(_ cropViewController: TOCropViewController, didCropToCircularImage image: UIImage, with cropRect: CGRect, angle: Int) {
         contentView.avatarWithName.setImage(image)
-        Task {
-            if let url = await uploadFileToStorage(image: image) {
-                await downloadFileFromStorage(url: url)
-            }
-        }
+//        Task {
+//            if let url = await uploadFileToStorage(image: image) {
+//                await downloadFileFromStorage(url: url)
+//            }
+//        }
         viewModel.saveItem(model: .init(type: .avatar, value: "", image: image))
         cropViewController.dismiss(animated: false) {
             self.pickerViewController?.dismiss(animated: true)

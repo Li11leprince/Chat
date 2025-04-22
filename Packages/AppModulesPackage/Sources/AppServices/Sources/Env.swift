@@ -74,4 +74,8 @@ public struct InfoPlist {
     public static var apiProduction: String {
         info["APP_API_PRODUCTION"] as? String ?? ""
     }
+    
+    public static var apiMediaStorage: String {
+        info["MEDIA_STORAGE_API"] as? String ?? ""
+    }
 }

@@ -15,6 +15,9 @@ struct AppContainer {
     @Injected(\.defaultsStorage) fileprivate static var defautlsStorage: DefaultsStorage
     @Injected(\.memoryStorage) fileprivate static var memoryStorage: MemoryStorage
     @Injected(\.passwordAuthProvide) fileprivate static var passwordAuthProvider: PasswordAuthProvider
+    @Injected(\.alamofireHttpClient) fileprivate static var alamofireHttpClient: AlamofireHttpClient
+    @Injected(\.httpRequestFactory) fileprivate static var httpRequestFactory: HttpRequestFactory
+    @Injected(\.networkMapper) fileprivate static var networkMapper: NetworkMapper
 
 
     fileprivate static let networkLogQueue = DispatchQueue(
@@ -70,13 +73,23 @@ private struct DebugStorageKey: InjectionKey {
     }()
 }
 
-//private struct AlamofireHttpClientKey: InjectionKey {
-//    static var currentValue: AlamofireHttpClient = {
-//        let httpClient: AlamofireHttpClient = .init(urlSessionConfiguration: <#URLSessionConfiguration#>, requestInterceptor: <#any RequestInterceptor#>, eventMonitors: <#[any EventMonitor]#>)
-//        
-//        return httpClient
-//    }()
-//}
+private struct NetworkMapperKey: InjectionKey {
+    static var currentValue: NetworkMapper = .init()
+}
+
+private struct AlamofireHttpClientKey: InjectionKey {
+    static var currentValue: AlamofireHttpClient = {
+        let httpClient: AlamofireHttpClient = .init(
+            urlSessionConfiguration: URLSessionConfiguration.af.default,
+            eventMonitors: [
+                RequestLogEventMonitor(queue: AppContainer.networkLogQueue),
+                ResponseLogEventMonitor(queue: AppContainer.networkLogQueue)
+            ]
+        )
+        
+        return httpClient
+    }()
+}
 
 private struct PasswordAuthProviderKey: InjectionKey {
     static var currentValue: PasswordAuthProvider = {
@@ -103,6 +116,24 @@ private struct DateFormatterServiceKey: InjectionKey {
     }()
 }
 
+private struct HttpRequestFactoryKey: InjectionKey {
+    static var currentValue: HttpRequestFactory = {
+        return HttpRequestFactory(meadiaStorageUrlProviding: { InfoPlist.apiMediaStorage })
+    }()
+}
+
+private struct MediaContentRepositoryKey: InjectionKey {
+    static var currentValue: MediaContentRepository = {
+        let mediaContentRepository = MediaContentRepository(
+            httpClient: AppContainer.alamofireHttpClient,
+            requestFactory: AppContainer.httpRequestFactory,
+            networkMapper: AppContainer.networkMapper
+        )
+        
+        return mediaContentRepository
+    }()
+}
+
 //MARK: Dependecy Paths
 public extension InjectedValues {
     var env: Env {
@@ -125,10 +156,10 @@ public extension InjectedValues {
         set { Self[DebugStorageKey.self] = newValue }
     }
     
-//    var alamofireHttpClient: AlamofireHttpClient {
-//        get { Self[AlamofireHttpClientKey.self] }
-//        set { Self[AlamofireHttpClientKey.self] = newValue }
-//    }
+    var alamofireHttpClient: AlamofireHttpClient {
+        get { Self[AlamofireHttpClientKey.self] }
+        set { Self[AlamofireHttpClientKey.self] = newValue }
+    }
     
     var passwordAuthProvide: PasswordAuthProvider {
         get { Self[PasswordAuthProviderKey.self] }
@@ -142,5 +173,20 @@ public extension InjectedValues {
     var dateFormatter: DateFormatting {
         get { Self[DateFormatterServiceKey.self] }
         set { Self[DateFormatterServiceKey.self] = newValue }
+    }
+    
+    var networkMapper: NetworkMapper {
+        get { Self[NetworkMapperKey.self] }
+        set { Self[NetworkMapperKey.self] = newValue }
+    }
+    
+    var httpRequestFactory: HttpRequestFactory {
+        get { Self[HttpRequestFactoryKey.self] }
+        set { Self[HttpRequestFactoryKey.self] = newValue }
+    }
+
+    var mediaContentRepository: MediaContentRepository {
+        get { Self[MediaContentRepositoryKey.self] }
+        set { Self[MediaContentRepositoryKey.self] = newValue }
     }
 }

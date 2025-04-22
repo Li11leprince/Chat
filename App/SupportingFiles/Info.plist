@@ -2,6 +2,8 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
+	<key>MEDIA_STORAGE_API</key>
+	<string>$(MEDIA_STORAGE_API)</string>
 	<key>BuildType</key>
 	<string>$(APP_BUILD_TYPE)</string>
 	<key>CFBundleDevelopmentRegion</key>

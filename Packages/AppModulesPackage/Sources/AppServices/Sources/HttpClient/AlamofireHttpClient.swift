@@ -6,17 +6,21 @@ import Combine
 import AppEntities
 import Utilities
 
+public enum UploadProgressOrResult<Payload> {
+    case progress(Double)
+    case success(Payload)
+    case failure(AppError)
+}
+
 public class AlamofireHttpClient {
     private let session: Session
     
     public init(
         urlSessionConfiguration: URLSessionConfiguration,
-        requestInterceptor: RequestInterceptor,
         eventMonitors: [EventMonitor]
     ) {
         self.session = Session(
             configuration: urlSessionConfiguration,
-            interceptor: requestInterceptor,
             eventMonitors: eventMonitors
         )
     }
@@ -39,6 +43,20 @@ public class AlamofireHttpClient {
             requestModifier: nil
         )
         .processResponse()
+    }
+    
+    public func sendUploadFile<Payload: Decodable>(
+        _ request: FileRequest,
+        headers: [String: String]
+    ) -> AnyPublisher<UploadProgressOrResult<Payload>, Never> {
+        
+        session.upload(
+            request.data,
+            to: request.endpoint,
+            method: .put,
+            headers: .init(headers)
+        )
+        .processResponseWithProgress()
     }
 }
 
@@ -103,6 +121,33 @@ extension DataRequest {
             .catch { (error: AppError) -> Just<Result<Payload, AppError>> in
                 Just(.failure(error))
             }
+            .receive(on: DispatchQueue.main)
+            .eraseToAnyPublisher()
+    }
+    
+    func processResponseWithProgress<Payload: Decodable>(
+        
+    ) -> AnyPublisher<UploadProgressOrResult<Payload>, Never> {
+        let progressSubject = PassthroughSubject<UploadProgressOrResult<Payload>, Never>()
+        self
+            .uploadProgress { progress in
+                progressSubject.send(.progress(progress.fractionCompleted))
+            }
+        
+        let resultPublisher =
+        self
+            .validate(statusCode: 200..<500)
+            .publishDecodable(type: Payload.self, queue: DispatchQueue.global(qos: .utility))
+            .value()
+            .map { value in
+                UploadProgressOrResult.success(value)
+            }
+            .catch { error -> Just<UploadProgressOrResult<Payload>> in
+                let appError = AppError.network(causedByError: error)
+                return Just(.failure(appError))
+            }
+        return progressSubject
+            .append(resultPublisher)
             .receive(on: DispatchQueue.main)
             .eraseToAnyPublisher()
     }

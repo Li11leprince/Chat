@@ -9,39 +9,45 @@ public struct HttpRequestFactory {
         .init(endpoint: "", method: .get)
     }
 
-    private let baseUrlProviding: () -> String
+    private let meadiaStorageUrlProviding: () -> String
 
-    public init(baseUrlProviding: @escaping () -> String) {
-        self.baseUrlProviding = baseUrlProviding
+    public init(meadiaStorageUrlProviding: @escaping () -> String) {
+        self.meadiaStorageUrlProviding = meadiaStorageUrlProviding
     }
 
-    private func endpointHb(for path: String) -> String {
-        let base = baseUrlProviding()
-        return "\(base)/api/"
+    private func endpointMediaStorage(for path: String) -> String {
+        let base = meadiaStorageUrlProviding()
+        return "\(base)/media/\(path)"
     }
 }
 
-// MARK: - Requests
+// MARK: - Storage
 
 extension HttpRequestFactory {
 
-    // MARK: - User Profile Requests
-
-    public func getUserProfile() -> HttpRequest<Params.None> {
-        .init(endpoint: endpointHb(for: "user/profile"), method: .get)
-    }
+//    // MARK: - User Profile Requests
+//
+//    public func getUserProfile() -> HttpRequest<Params.None> {
+//        .init(endpoint: endpointHb(for: "user/profile"), method: .get)
+//    }
+//    
+//    public func postUserProfile(
+//        params: Params.UserProfile
+//    ) -> HttpRequest<Params.UserProfile> {
+//        return .init(
+//            endpoint: endpointHb(for: "user/profile"),
+//            method: .post,
+//            params: params,
+//            encoder: JSONParameterEncoder.default
+//        )
+//    }
     
-    public func postUserProfile(
-        params: Params.UserProfile
-    ) -> HttpRequest<Params.UserProfile> {
+    public func putFileToStorage(_ data: Data, fileName: String) -> FileRequest {
         return .init(
-            endpoint: endpointHb(for: "user/profile"),
-            method: .post,
-            params: params,
-            encoder: JSONParameterEncoder.default
+            endpoint: endpointMediaStorage(for: fileName),
+            data: data
         )
     }
-    
 }
 
 // MARK: - Request Params

@@ -11,6 +11,8 @@ APP_BUILD_TYPE = qa // production, qa
 
 APP_API_STAGING = https:/$()/api.apptemplate.effective.band
 APP_API_PRODUCTION = https:/$()/api.apptemplate.effective.band
+MEDIA_STORAGE_API = https:/$()/srkadqrsczrgzqluprpw.supabase.co/storage/v1/object
+
 
 //----------------------------------------------------------------------
 // Override settings

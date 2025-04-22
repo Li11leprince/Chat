@@ -53,3 +53,8 @@ public struct MultipartRequest {
         self.multipartParams = multipartParams
     }
 }
+
+public struct FileRequest {
+    let endpoint: String
+    let data: Data
+}
