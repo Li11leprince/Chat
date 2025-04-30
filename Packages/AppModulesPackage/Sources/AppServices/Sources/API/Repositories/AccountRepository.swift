@@ -1,83 +1,73 @@
-////  Copyright © 2021 My organization. All rights reserved.
-//
-//import Foundation
-//import AppEntities
-//import Combine
-//import UIKit
-//import AppBaseFlow
-//
-//final class AccountRepository {
-//
-//    typealias FetchProfileResult = Result<Account.Profile, AppError>
+//  Copyright © 2021 My organization. All rights reserved.
+
+import Foundation
+import AppEntities
+import Combine
+import AppBaseFlow
+import FirebaseFirestore
+
+final class AccountRepository {
+
+    typealias FetchProfileResult = Result<UserProfile, AppError>
 //    typealias UploadAvatarResult = Result<Image, AppError>
-//
-//    private let httpClient: AlamofireHttpClient
-//    private let requestFactory: HttpRequestFactory
-//    private let accountHolder: AccountHolder
-//    private let networkMapper: NetworkMapper
-//
-//    init(
-//        httpClient: AlamofireHttpClient,
-//        requestFactory: HttpRequestFactory,
-//        accountHolder: AccountHolder,
-//        networkMapper: NetworkMapper
-//    ) {
-//        self.httpClient = httpClient
-//        self.requestFactory = requestFactory
-//        self.accountHolder = accountHolder
-//        self.networkMapper = networkMapper
-//    }
-//
-//    func fetchProfile() -> AnyPublisher<FetchProfileResult, Never> {
-//        let publisher = httpClient.sendRequest(
-//            requestFactory.getUseProfile(),
-//            payloadType: UserProfilePayload.self
-//        )
-//        .flatMap { [weak self] (result: Result<UserProfilePayload, AppError>) -> Just<FetchProfileResult> in
-//
-//            guard let self = self else {
-//                return Just<FetchProfileResult>(
-//                    .failure(.unexpected)
-//                )
-//            }
-//
-//            return self.handleProfileResponse(result: result)
-//        }
-//        .eraseToAnyPublisher()
-//
-//        return publisher
-//    }
-//
-//    func uploadAvatarImage(
-//        _ image: UIImage,
-//        imageCompressionQuality: CGFloat = GlobalConfig.Network.imageCompressionQuality
-//    ) -> AnyPublisher<UploadAvatarResult, Never> {
-//
-//        guard let data = image.jpegData(compressionQuality: imageCompressionQuality) else {
-//            // IMPROVE: Add more specific error
-//            return Just<UploadAvatarResult>(
-//                .failure(.unexpected)
-//            )
-//            .eraseToAnyPublisher()
-//        }
-//
-//        let publisher = httpClient.sendUploadImageRequest(
-//            requestFactory.uploadAvatar(data: data),
-//            payloadType: ImagePayload.self
-//        )
-//        .flatMap { [weak self] (payloadResult: Result<ImagePayload, AppError>) -> Just<UploadAvatarResult> in
-//            guard let self = self else {
-//                return Just<UploadAvatarResult>(
-//                    .failure(.unexpected)
-//                )
-//            }
-//            return self.handleUploadAvatarRespose(result: payloadResult)
-//        }
-//        .eraseToAnyPublisher()
-//        return publisher
-//    }
-//}
-//
+    typealias VoidResult = Result<Void, AppError>
+
+    private let httpClient: AlamofireHttpClient
+    private let requestFactory: HttpRequestFactory
+    private let accountHolder: AccountHolder
+    private let networkMapper: NetworkMapper
+    private let firestore: Firestore
+
+    init(
+        httpClient: AlamofireHttpClient,
+        requestFactory: HttpRequestFactory,
+        accountHolder: AccountHolder,
+        networkMapper: NetworkMapper,
+        firestore: Firestore = .firestore()
+    ) {
+        self.httpClient = httpClient
+        self.requestFactory = requestFactory
+        self.accountHolder = accountHolder
+        self.networkMapper = networkMapper
+        self.firestore = firestore
+    }
+
+    func fetchProfile() -> AnyPublisher<FetchProfileResult, Never> {
+        guard let userId = accountHolder.account?.profile.id else {
+            return Just(.failure(.unexpected)).eraseToAnyPublisher()
+        }
+        let publisher = Future<FetchProfileResult, Never> { [weak self] promise in
+            guard let self else { return }
+            Task {
+                do {
+                    let profile = try await self.firestore.collection("users").document(userId).getDocument(as: UserProfile.self)
+                    promise(.success(.success(profile)))
+                } catch {
+                    promise(.success(.failure(.network(causedByError: error))))
+                }
+            }
+        }
+        
+        return publisher.eraseToAnyPublisher()
+    }
+    
+    func updateProfile(
+        profile: UserProfile
+    ) -> AnyPublisher<VoidResult, Never> {
+        let publisher = Future<VoidResult, Never> { [weak self] promise in
+            guard let self else { return }
+            do {
+                let _ = try self.firestore.collection("users").document(profile.id).setData(from: profile)
+                promise(.success(.success(())))
+            } catch {
+                promise(.success(.failure(.network(causedByError: error))))
+            }
+        }
+        
+        return publisher.eraseToAnyPublisher()
+    }
+}
+
 //// MARK: - Handling Response
 //
 //private extension AccountRepository {

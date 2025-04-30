@@ -27,7 +27,7 @@ struct TextMessageCellModel: Hashable {
                 id: String(i),
                 time: "12:05",
                 text: String("Text\(i)"),
-                from: .init(id: "fds", role: "fsd", phoneNumber: "fsd", firstName: "Anna", lastName: "Ivanova", displayName: "Anna Ivanova", smallAvatar: nil, mediumAvatar: nil, originalAvatar: nil),
+                from: .init(id: "fds", phoneNumber: "fsd", firstName: "Anna", lastName: "Ivanova", displayName: "Anna Ivanova", bio: "fsd", birthday: 4234, avatar: "fsd"),
                 isRead: true,
                 reactions: [],
                 isChanged: false,

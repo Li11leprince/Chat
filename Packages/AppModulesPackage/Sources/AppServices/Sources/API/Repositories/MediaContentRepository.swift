@@ -6,7 +6,8 @@ import AppEntities
 
 final public class MediaContentRepository {
     
-    public typealias UploadFileResult = UploadProgressOrResult<String>
+    public typealias UploadFileResult = LoadingProgressOrResult<String>
+    public typealias DownloadFileResult = LoadingProgressOrResult<URL>
 //    typealias UploadAvatarResult = Result<Image, AppError>
     
     private let httpClient: AlamofireHttpClient
@@ -30,8 +31,7 @@ final public class MediaContentRepository {
         fileName: String
     ) -> AnyPublisher<UploadFileResult, Never> {
         let headers = [
-            "Authorization": "Bearer \(token)",
-            "Content-Type": "application/octet-stream"
+            "Authorization": "Bearer \(token)"
         ]
         let publisher = httpClient
             .sendUploadFile(
@@ -39,7 +39,7 @@ final public class MediaContentRepository {
                 payloadType: UploadFilePayload.self,
                 headers: headers
             )
-            .flatMap { [weak self] (result: UploadProgressOrResult<UploadFilePayload>) -> Just<UploadFileResult> in
+            .flatMap { [weak self] (result: LoadingProgressOrResult<UploadFilePayload>) -> Just<UploadFileResult> in
 
                 guard let self = self else {
                     return Just<UploadFileResult>(
@@ -50,7 +50,30 @@ final public class MediaContentRepository {
                 return self.handleUploadFileResponse(result: result)
             }
             .eraseToAnyPublisher()
+        
+        return publisher
+    }
+    
+    public func downloadFile(
+        _ url: String
+    ) -> AnyPublisher<DownloadFileResult, Never> {
+        let headers = [
+            "Authorization": "Bearer \(token)"
+        ]
+        let publisher = httpClient
+            .sendDownloadFile(url, headers: headers)
+            .flatMap { [weak self] (result: LoadingProgressOrResult<URL>) -> Just<DownloadFileResult> in
 
+                guard let self = self else {
+                    return Just<DownloadFileResult>(
+                        .failure(.unexpected)
+                    )
+                }
+
+                return self.handleDownloadFileResponse(result: result)
+            }
+            .eraseToAnyPublisher()
+        
         return publisher
     }
 }
@@ -67,7 +90,7 @@ struct UploadFilePayload: Decodable {
 private extension MediaContentRepository {
     
     func handleUploadFileResponse(
-        result: UploadProgressOrResult<UploadFilePayload>
+        result: LoadingProgressOrResult<UploadFilePayload>
     ) -> Just<UploadFileResult> {
         switch result {
         case .success(let payload):
@@ -77,6 +100,19 @@ private extension MediaContentRepository {
             return Just(UploadFileResult.failure(appError))
         case .progress(let progress):
             return Just(UploadFileResult.progress(progress))
+        }
+    }
+    
+    func handleDownloadFileResponse(
+        result: LoadingProgressOrResult<URL>
+    ) -> Just<DownloadFileResult> {
+        switch result {
+        case .success(let payload):
+            return Just(DownloadFileResult.success(payload))
+        case .failure(let appError):
+            return Just(DownloadFileResult.failure(appError))
+        case .progress(let progress):
+            return Just(DownloadFileResult.progress(progress))
         }
     }
 }

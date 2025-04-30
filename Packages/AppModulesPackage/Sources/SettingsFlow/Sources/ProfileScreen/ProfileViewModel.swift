@@ -13,7 +13,7 @@ final class ProfileViewModel: BaseViewModel<ProfileContext.ViewEvent,
     private lazy var userDataModel: UserDataModel = {
         UserDataModel.mock
     }()
-    
+        
     override func onViewEvent(_ event: ProfileContext.ViewEvent) {
         switch event {
         case .viewDidLoad:
@@ -67,7 +67,7 @@ final class ProfileViewModel: BaseViewModel<ProfileContext.ViewEvent,
                     case .success(let url):
                         print("AAAA \(url)")
                     case .failure(let failure):
-                        print("AAAA \(failure)")
+                        print("AAAA \(failure.localizedDescription)")
                     }
                 }
                 .store(in: &cancelableSet)

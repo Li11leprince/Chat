@@ -8,7 +8,7 @@ import PackageDescription
 /// Decribes module dependency that can be external or internal
 protocol AppModuleDependency {
     /// Provider module as `Target.Dependency`
-    var targetDependency: Target.Dependency { get }
+    var targetDependency: [Target.Dependency] { get }
 }
 
 /// Decribes app module, can be product or test
@@ -26,7 +26,7 @@ final class AppModule: AppModuleDependency {
     /// Describes plugins are used
     let plugins: [Target.PluginUsage]
 
-    var targetDependency: Target.Dependency { .target(name: name) }
+    var targetDependency: [Target.Dependency] { [.target(name: name)] }
     /// Provides module as library product
     var libraryProduct: Product { .library(name: name, targets: [name]) }
     /// Provides module as `Target`
@@ -67,7 +67,13 @@ final class AppModule: AppModuleDependency {
     }
 
     private func makeTarget() -> Target {
-        let deps = dependencies.map(\.targetDependency)
+        let depss = dependencies.map { deps in
+            let deps = deps.targetDependency.map { dep in
+                return dep
+            }
+            return deps
+        }
+        let deps = depss.flatMap { $0 }
         let resources: [Resource]? = resourcePath.map { path in
             [Resource.process(path)]
         }
@@ -83,17 +89,19 @@ final class AppModule: AppModuleDependency {
 /// Describes external package
 final class ExternalPackage: AppModuleDependency {
     /// Product name to use as dependency
-    let productName: String
+    let productName: [String]
     /// Package name in which product is defined
     let packageName: String
     /// `Package.Dependency` info
     let dependency: Package.Dependency
 
-    var targetDependency: Target.Dependency { .product(name: productName, package: packageName) }
+    var targetDependency: [Target.Dependency] { productName.map({ name in
+            .product(name: name, package: packageName)
+    }) }
 
-    init(productName: String, packageName: String? = nil, dependency: Package.Dependency) {
+    init(productName: [String], packageName: String? = nil, dependency: Package.Dependency) {
         self.productName = productName
-        self.packageName = packageName ?? productName
+        self.packageName = packageName ?? productName[0]
         self.dependency = dependency
     }
 }
@@ -113,7 +121,7 @@ final class ExternalPackage: AppModuleDependency {
 /// Describes External Modules
 enum ExternalModules {
     static let iqKeyboardManager = ExternalPackage(
-        productName: "IQKeyboardManagerSwift",
+        productName: ["IQKeyboardManagerSwift"],
         packageName: "IQKeyboardManager",
         dependency: .package(
             url: "https://github.com/hackiftekhar/IQKeyboardManager.git",
@@ -121,49 +129,49 @@ enum ExternalModules {
         )
     )
     static let tweeTextField = ExternalPackage(
-        productName: "TweeTextField",
+        productName: ["TweeTextField"],
         dependency: .package(
             url: "https://github.com/oleghnidets/TweeTextField.git",
             from: "1.6.3"
         )
     )
     static let alamofire = ExternalPackage(
-        productName: "Alamofire",
+        productName: ["Alamofire"],
         dependency: .package(
             url: "https://github.com/Alamofire/Alamofire.git",
             from: "5.6.1"
         )
     )
     static let sdWebImage = ExternalPackage(
-        productName: "SDWebImage",
+        productName: ["SDWebImage"],
         dependency: .package(
             url: "https://github.com/SDWebImage/SDWebImage.git",
             from: "5.1.0"
         )
     )
     static let sdWebImageWebPCoder = ExternalPackage(
-        productName: "SDWebImageWebPCoder",
+        productName: ["SDWebImageWebPCoder"],
         dependency: .package(
             url: "https://github.com/SDWebImage/SDWebImageWebPCoder.git",
             from: "0.3.0"
         )
     )
     static let snapKit = ExternalPackage(
-        productName: "SnapKit",
+        productName: ["SnapKit"],
         dependency: .package(
             url: "https://github.com/SnapKit/SnapKit.git",
             from: "5.0.1"
         )
     )
     static let progressHUD = ExternalPackage(
-        productName: "JGProgressHUD",
+        productName: ["JGProgressHUD"],
         dependency: .package(
             url: "https://github.com/JonasGessner/JGProgressHUD.git",
             from: "2.2.0"
         )
     )
     static let rSwift = ExternalPackage(
-        productName: "RswiftLibrary",
+        productName: ["RswiftLibrary"],
         packageName: "R.swift",
         dependency: .package(
             url: "https://github.com/mac-cain13/R.swift.git",
@@ -171,7 +179,7 @@ enum ExternalModules {
         )
     )
     static let firebaseAnalytics = ExternalPackage(
-        productName: "FirebaseAnalytics",
+        productName: ["FirebaseAnalytics"],
         packageName: "Firebase",
         dependency: .package(
             url: "https://github.com/firebase/firebase-ios-sdk.git",
@@ -179,7 +187,7 @@ enum ExternalModules {
         )
     )
     static let firebaseAuth = ExternalPackage(
-        productName: "FirebaseAuth",
+        productName: ["FirebaseAuth"],
         packageName: "firebase-ios-sdk",
         dependency: .package(
             url: "https://github.com/firebase/firebase-ios-sdk.git",
@@ -187,7 +195,7 @@ enum ExternalModules {
         )
     )
     static let firebaseCrashlytics = ExternalPackage(
-        productName: "FirebaseCrashlytics",
+        productName: ["FirebaseCrashlytics"],
         packageName: "Firebase",
         dependency: .package(
             url: "https://github.com/firebase/firebase-ios-sdk.git",
@@ -195,15 +203,15 @@ enum ExternalModules {
         )
     )
     static let firebaseFirestore = ExternalPackage(
-        productName: "FirebaseFirestore",
-        packageName: "Firebase",
+        productName: ["FirebaseFirestore"],
+        packageName: "firebase-ios-sdk",
         dependency: .package(
             url: "https://github.com/firebase/firebase-ios-sdk.git",
             from: "11.6.0"
         )
     )
     static let firebaseMessaging = ExternalPackage(
-        productName: "FirebaseMessaging",
+        productName: ["FirebaseMessaging"],
         packageName: "Firebase",
         dependency: .package(
             url: "https://github.com/firebase/firebase-ios-sdk.git",
@@ -211,7 +219,7 @@ enum ExternalModules {
         )
     )
     static let firebaseCore = ExternalPackage(
-        productName: "FirebaseCore",
+        productName: ["FirebaseCore", "FirebaseFirestore"],
         packageName: "firebase-ios-sdk",
         dependency: .package(
             url: "https://github.com/firebase/firebase-ios-sdk.git",
@@ -219,21 +227,21 @@ enum ExternalModules {
         )
     )
     static let lottie = ExternalPackage(
-        productName: "Lottie",
+        productName: ["Lottie"],
         dependency: .package(
             url: "https://github.com/airbnb/lottie-spm.git",
             from: "4.5.1"
         )
     )
     static let toCropViewController = ExternalPackage(
-        productName: "TOCropViewController",
+        productName: ["TOCropViewController"],
         dependency: .package(
             url: "https://github.com/TimOliver/TOCropViewController.git",
             from: "2.7.4"
         )
     )
     static let supabase = ExternalPackage(
-        productName: "Supabase",
+        productName: ["Supabase"],
         packageName: "supabase-swift",
         dependency: .package(
             url: "https://github.com/supabase/supabase-swift.git",

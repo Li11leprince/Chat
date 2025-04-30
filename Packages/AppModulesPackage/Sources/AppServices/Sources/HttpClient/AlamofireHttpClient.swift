@@ -6,7 +6,7 @@ import Combine
 import AppEntities
 import Utilities
 
-public enum UploadProgressOrResult<Payload> {
+public enum LoadingProgressOrResult<Payload> {
     case progress(Double)
     case success(Payload)
     case failure(AppError)
@@ -49,7 +49,7 @@ public class AlamofireHttpClient {
         _ request: FileRequest,
         payloadType: Payload.Type,
         headers: [String: String]
-    ) -> AnyPublisher<UploadProgressOrResult<Payload>, Never> {
+    ) -> AnyPublisher<LoadingProgressOrResult<Payload>, Never> {
         
         session.upload(
             request.data,
@@ -58,6 +58,14 @@ public class AlamofireHttpClient {
             headers: .init(headers)
         )
         .processResponseWithProgress()
+    }
+    
+    public func sendDownloadFile(
+        _ url: String,
+        headers: [String: String]
+    ) -> AnyPublisher<LoadingProgressOrResult<URL>, Never> {
+        session.download(url)
+            .processResponseWithProgress()
     }
 }
 
@@ -128,15 +136,14 @@ extension DataRequest {
     
     func processResponseWithProgress<Payload: Decodable>(
         
-    ) -> AnyPublisher<UploadProgressOrResult<Payload>, Never> {
-        let progressSubject = PassthroughSubject<UploadProgressOrResult<Payload>, Never>()
+    ) -> AnyPublisher<LoadingProgressOrResult<Payload>, Never> {
+        let progressSubject = PassthroughSubject<LoadingProgressOrResult<Payload>, Never>()
         self
             .uploadProgress { progress in
                 progressSubject.send(.progress(progress.fractionCompleted))
             }
         
-        let resultPublisher =
-        self
+        return self
             .validate(statusCode: 200..<500)
             .publishDecodable(
                 type: Payload.self,
@@ -149,24 +156,45 @@ extension DataRequest {
                 return error
             }
             .map { value in
-                UploadProgressOrResult.success(value)
+                LoadingProgressOrResult.success(value)
             }
-            .catch { error -> Just<UploadProgressOrResult<Payload>> in
+            .catch { error -> Just<LoadingProgressOrResult<Payload>> in
                 let appError = AppError.network(causedByError: error)
                 return Just(.failure(appError))
             }
-        return resultPublisher
-            .combineLatest(progressSubject)
-            .map({ (result, progress) in
-                if case .progress(let progress) = progress {
-                    if progress == 1.0 {
-                        return result
-                    }
-                }
-                return progress
-            })
-            .receive(on: DispatchQueue.main)
+            .merge(with: progressSubject.prepend(.progress(0)))
             .eraseToAnyPublisher()
     }
 }
 
+extension DownloadRequest {
+    func processResponseWithProgress(
+        
+    ) -> AnyPublisher<LoadingProgressOrResult<URL>, Never> {
+        let progressSubject = PassthroughSubject<LoadingProgressOrResult<URL>, Never>()
+        self
+            .uploadProgress { progress in
+                progressSubject.send(.progress(progress.fractionCompleted))
+            }
+        
+        return self
+            .validate(statusCode: 200..<500)
+            .publishURL()
+            .tryMap { response -> URL in
+                guard let fileURL = response.fileURL else {
+                    throw AppError.unexpected
+                }
+                return fileURL
+            }
+            .map { fileURL in
+                LoadingProgressOrResult.success(fileURL)
+            }
+            .catch { error -> Just<LoadingProgressOrResult<URL>> in
+                let appError = AppError.network(causedByError: error)
+                return Just(.failure(appError))
+            }
+            .merge(with: progressSubject.prepend(.progress(0)))
+            .receive(on: DispatchQueue.main)
+            .eraseToAnyPublisher()
+    }
+}

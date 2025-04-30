@@ -2,39 +2,35 @@
 
 import Foundation
 
-public struct UserProfile: Hashable {
+public struct UserProfile: Codable, Hashable {
 
     public let id: String
-    public let role: String
     public let phoneNumber: String
     public let firstName: String
     public let lastName: String
     public let displayName: String
-    public let smallAvatar: Avatar?
-    public let mediumAvatar: Avatar?
-    public let originalAvatar: Avatar?
+    public let bio: String
+    public let birthday: Double
+    public let avatar: String?
 
     public init(
         id: String,
-        role: String,
         phoneNumber: String,
         firstName: String,
         lastName: String,
         displayName: String,
-        smallAvatar: Avatar?,
-        mediumAvatar: Avatar?,
-        originalAvatar: Avatar?
-
+        bio: String,
+        birthday: Double,
+        avatar: String?
     ) {
         self.id = id
-        self.role = role
         self.phoneNumber = phoneNumber
         self.firstName = firstName
         self.lastName = lastName
         self.displayName = displayName
-        self.smallAvatar = smallAvatar
-        self.mediumAvatar = mediumAvatar
-        self.originalAvatar = originalAvatar
+        self.bio = bio
+        self.birthday = birthday
+        self.avatar = avatar
     }
 
     public static func == (lhs: UserProfile, rhs: UserProfile) -> Bool {

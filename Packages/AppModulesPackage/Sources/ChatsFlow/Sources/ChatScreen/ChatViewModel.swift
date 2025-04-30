@@ -25,7 +25,7 @@ final class ChatViewModel: BaseViewModel<ChatContext.ViewEvent,
     
     private func sendMessage(_ message: String) {
         let trimmedMessage = message.trimmingCharacters(in: .whitespacesAndNewlines)
-        let message = Message(id: String(describing: UUID()), timestamp: Date().timeIntervalSince1970, messageType: .plainText, text: trimmedMessage, thumb: nil, from: .init(id: "fsd", role: "fsd", phoneNumber: "fsd", firstName: "Anna", lastName: "Ivanova", displayName: "Anna Ivanova", smallAvatar: nil, mediumAvatar: nil, originalAvatar: nil), isRead: false, redirectedMessages: [], attachments: [], reactions: [], replyTo: replyTo, isChanged: false)
+        let message = Message(id: String(describing: UUID()), timestamp: Date().timeIntervalSince1970, messageType: .plainText, text: trimmedMessage, thumb: nil, from: .init(id: "fsd", phoneNumber: "fsd", firstName: "Anna", lastName: "Ivanova", displayName: "Anna Ivanova", bio: "fsd", birthday: 423, avatar: "fds"), isRead: false, redirectedMessages: [], attachments: [], reactions: [], replyTo: replyTo, isChanged: false)
         viewState = .newMessages(mapToMessageCellModels(messages: [message]))
         replyTo = nil
     }

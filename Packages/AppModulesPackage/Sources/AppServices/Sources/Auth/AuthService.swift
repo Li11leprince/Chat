@@ -10,6 +10,13 @@ public enum AuthState {
     case notRegistered
 }
 
+// MARK: - AccountHolder
+
+public protocol AccountHolder {
+    var account: Account? { get }
+    func updateAccount(_ account: Account)
+}
+
 public protocol AuthService {
     typealias VoidResult = Result<Void, AppError>
     
@@ -19,7 +26,9 @@ public protocol AuthService {
     func signOut() -> AnyPublisher<VoidResult, Never>
 }
 
-public final class AuthServiceImpl: AuthService {
+public final class AuthServiceImpl: AuthService, AccountHolder {
+    public var account: Account? { provideAccount() }
+    
     public var authState: AuthState {
         if isSignedIn {
             return .signedIn
@@ -39,6 +48,8 @@ public final class AuthServiceImpl: AuthService {
     
     private var credentialsKey: String { "\(Self.self).credentialsKey" }
     private var signedUpKey: String { "\(Self.self).signedUpKey" }
+    private var accountKey: String { "\(Self.self).accountKey" }
+
     
     public init(
         authProvider: PasswordAuthProvider,
@@ -92,6 +103,10 @@ public final class AuthServiceImpl: AuthService {
         
         return publisher
     }
+    
+    public func updateAccount(_ account: Account) {
+        saveAccount(account)
+    }
 }
 
 // MARK: Helpers
@@ -122,12 +137,20 @@ private extension AuthServiceImpl {
         defaultsStorage.add(primitiveValue: true, forKey: signedUpKey)
     }
     
+    private func saveAccount(_ user: Account) {
+        defaultsStorage.add(object: user, forKey: accountKey)
+    }
+    
     private func provideIsSignedUp() -> Bool {
         defaultsStorage.primitiveValue(forKey: signedUpKey) ?? false
     }
     
     private func provideCredentials() -> Credentials? {
         defaultsStorage.object(forKey: credentialsKey)
+    }
+    
+    private func provideAccount() -> Account? {
+        defaultsStorage.object(forKey: accountKey)
     }
     
     private func removeCredentials() {
