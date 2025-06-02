@@ -12,6 +12,7 @@ open class BaseView: UIView {
     private(set) public lazy var typography = designSystem.typography
     private(set) public lazy var components = designSystem.components
     private(set) public lazy var strings = designSystem.strings
+    private(set) public lazy var formatter = designSystem.formatter
 
     public override init(frame: CGRect) {
         super.init(frame: frame)

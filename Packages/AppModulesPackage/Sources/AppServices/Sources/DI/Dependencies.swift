@@ -18,6 +18,8 @@ struct AppContainer {
     @Injected(\.alamofireHttpClient) fileprivate static var alamofireHttpClient: AlamofireHttpClient
     @Injected(\.httpRequestFactory) fileprivate static var httpRequestFactory: HttpRequestFactory
     @Injected(\.networkMapper) fileprivate static var networkMapper: NetworkMapper
+    @Injected(\.authService) fileprivate static var authService: AuthService
+    @Injected(\.accountHolder) fileprivate static var accountHolder: AccountHolder
 
 
     fileprivate static let networkLogQueue = DispatchQueue(
@@ -110,6 +112,17 @@ private struct AuthServiceKey: InjectionKey {
     }()
 }
 
+private struct AccountHolderKey: InjectionKey {
+    static var currentValue: AccountHolder = {
+        let authService: AccountHolder = AuthServiceImpl(
+            authProvider: AppContainer.passwordAuthProvider,
+            defaultsStorage: AppContainer.defautlsStorage
+        )
+        
+        return authService
+    }()
+}
+
 private struct DateFormatterServiceKey: InjectionKey {
     static var currentValue: DateFormatting = {
         return DefaultDateFormatterService()
@@ -131,6 +144,16 @@ private struct MediaContentRepositoryKey: InjectionKey {
         )
         
         return mediaContentRepository
+    }()
+}
+
+private struct AccountRepositoryKey: InjectionKey {
+    static var currentValue: AccountRepository = {
+        let accountRepository = AccountRepository(
+            accountHolder: AppContainer.accountHolder
+        )
+        
+        return accountRepository
     }()
 }
 
@@ -170,6 +193,11 @@ public extension InjectedValues {
         set { Self[AuthServiceKey.self] = newValue }
     }
     
+    var accountHolder: AccountHolder {
+        get { Self[AccountHolderKey.self] }
+        set { Self[AccountHolderKey.self] = newValue }
+    }
+    
     var dateFormatter: DateFormatting {
         get { Self[DateFormatterServiceKey.self] }
         set { Self[DateFormatterServiceKey.self] = newValue }
@@ -188,5 +216,10 @@ public extension InjectedValues {
     var mediaContentRepository: MediaContentRepository {
         get { Self[MediaContentRepositoryKey.self] }
         set { Self[MediaContentRepositoryKey.self] = newValue }
+    }
+    
+    var accountRepository: AccountRepository {
+        get { Self[AccountRepositoryKey.self] }
+        set { Self[AccountRepositoryKey.self] = newValue }
     }
 }

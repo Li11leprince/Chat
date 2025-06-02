@@ -23,6 +23,13 @@ final class SignUpWithEmailViewController: BaseViewController<SignUpWithEmailVie
             break
         case .loading:
             contentView.signUpButton.isLoading = true
+        case .error(let error):
+            contentView.signUpButton.isLoading = false
+            showAlert(
+                title: error.alert?.title,
+                message: error.alert?.message ?? "Unexpected",
+                actions: [.okAction()]
+            )
         }
     }
     
@@ -67,22 +74,10 @@ final class SignUpWithEmailViewController: BaseViewController<SignUpWithEmailVie
 //MARK: Observers
 extension SignUpWithEmailViewController {
     private func addObservers() {
-        observeNameTextDidEndEditing()
         observeEmailTextDidEndEditing()
         observePasswordTextDidEndEditing()
         observeConfirmPasswordTextDidEndEditing()
         observeForm()
-    }
-    
-    private func observeNameTextDidEndEditing() {
-        contentView.nameTextField.textDidEndEditingPublisher
-            .sink { [weak self] name in
-                guard let self else { return }
-                self.viewModel.isNameValid(name)
-                    ? self.contentView.nameTextField.hideError()
-                    : self.contentView.nameTextField.showError(message: self.contentView.strings.signInInvalidName)
-            }
-            .store(in: &cancelableSet)
     }
     
     private func observeEmailTextDidEndEditing() {
@@ -126,15 +121,14 @@ extension SignUpWithEmailViewController {
     }
     
     private func observeForm() {
-        contentView.nameTextField.textDidEndEditingPublisher
+        contentView.emailTextField.textDidEndEditingPublisher
             .combineLatest(
-                contentView.emailTextField.textDidEndEditingPublisher,
                 contentView.passwordTextField.textDidEndEditingPublisher,
                 contentView.confirmPasswordTextField.textDidEndEditingPublisher
             )
             .sink { [weak self] form in
                 guard let self else { return }
-                self.contentView.signUpButton.isEnabled = self.viewModel.isFormValid(form.0, form.1, form.2, form.3)
+                self.contentView.signUpButton.isEnabled = self.viewModel.isFormValid(form.0, form.1, form.2)
             }
             .store(in: &cancelableSet)
     }

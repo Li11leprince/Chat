@@ -64,6 +64,7 @@ extension StringsLibrary {
     public var signInCreateAccount: String { localized("sign_in_create_account") }
     public var signInInvalidName: String { localized("sign_in_invalid_name") }
     public var signInInvalidEmail: String { localized("sign_in_invalid_email") }
+    public var signInInvalidPhone: String { localized("sign_in_invalid_phone") }
     public func signInInvalidPassword(minLength: String) -> String {
         formatted(
             localized("sign_in_invalid_password"),

@@ -1,42 +1,36 @@
-//  
-
 import Foundation
 import AppBaseFlow
 
-struct SignUpWithEmailContext {
+struct SignUpAdditionalInfoContext {
     private init() {}
 }
 
-
-//MARK: ViewState
-
-extension SignUpWithEmailContext {
+// MARK: ViewState
+extension SignUpAdditionalInfoContext {
     enum ViewState: Stubable {
         case initial
         case loading
-        case error(ScreenError)
+        case error(ScreenError?)
         
         static var stub: ViewState { .initial }
     }
 }
 
-//MARK: OutputEvent
-
-extension SignUpWithEmailContext {
+// MARK: OutputEvent
+extension SignUpAdditionalInfoContext {
     enum OutputEvent {
         case finish
     }
 }
 
-//MARK: ViewEvent
-
-extension SignUpWithEmailContext {
+// MARK: ViewEvent
+extension SignUpAdditionalInfoContext {
     enum ViewEvent {
         case viewDidLoad
-        case signUp(email: String, password: String)
+        case updateProfile
     }
 }
 
-extension SignUpWithEmailContext {
+extension SignUpAdditionalInfoContext {
     typealias ScreenError = BaseUIError<Void>
-}
+} 

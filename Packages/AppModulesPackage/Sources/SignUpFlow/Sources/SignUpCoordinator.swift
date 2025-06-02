@@ -52,7 +52,8 @@ private extension SignUpCoordinator {
                 case .didSelectProvider(let provider):
                     switch provider {
                     case .pwd:
-                        startPwdSignUpScreen()
+//                        startPwdSignUpScreen()
+                        startAdditionalInfoScreen()
                     case .apple:
                         print("apple")
                     case .facebook:
@@ -73,11 +74,26 @@ private extension SignUpCoordinator {
     private func startPwdSignUpScreen() {
         let viewModel = SignUpWithEmailViewModel()
         let viewController = SignUpWithEmailViewController(viewModel: viewModel)
-        
+        let navController = UINavigationController(rootViewController: viewController)
         viewModel.outputEventPublisher
             .sink { [weak self] event in
                 guard let self else { return }
-                
+                switch event {
+                case .finish:
+                    self.startAdditionalInfoScreen(/*vc: navController*/)
+                }
+            }
+            .store(in: &setCancelable)
+        navigationController?.present(navController, animated: true)
+    }
+
+    private func startAdditionalInfoScreen(/*vc: UINavigationController*/) {
+        let viewModel = SignUpAdditionalInfoViewModel()
+        let viewController = SignUpAdditionalInfoViewController(viewModel: viewModel)
+        viewController.navigationItem.hidesBackButton = true
+        viewModel.outputEventPublisher
+            .sink { [weak self] event in
+                guard let self else { return }
                 switch event {
                 case .finish:
                     viewController.dismiss(animated: false)
@@ -85,7 +101,7 @@ private extension SignUpCoordinator {
                 }
             }
             .store(in: &setCancelable)
-        
+//        vc.pushViewController(viewController, animated: true)
         navigationController?.present(viewController, animated: true)
     }
 }

@@ -285,6 +285,7 @@ enum InternalModules {
             utilitiesModule,
             ExternalModules.tweeTextField,
             ExternalModules.progressHUD,
+            ExternalModules.toCropViewController,
             ExternalModules.rSwift
         ],
         plugins: [
@@ -388,8 +389,8 @@ enum InternalModules {
             appServicesModule,
             ExternalModules.snapKit,
             ExternalModules.tweeTextField,
-            ExternalModules.toCropViewController,
-            ExternalModules.supabase
+            ExternalModules.supabase,
+            ExternalModules.toCropViewController
         ]
     )
     

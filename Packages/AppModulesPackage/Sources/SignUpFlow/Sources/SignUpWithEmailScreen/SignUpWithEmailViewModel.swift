@@ -23,14 +23,14 @@ final class SignUpWithEmailViewModel: BaseViewModel<SignUpWithEmailContext.ViewE
     override func onViewEvent(_ event: SignUpWithEmailContext.ViewEvent) {
         switch event {
         case .viewDidLoad:
-            break
-        case .signUp(email: let email, password: let password):
+            viewDidLoad()
+        case .signUp(let email, let password):
             signUp(email: email, password: password)
         }
     }
     
-    func isNameValid(_ name: String) -> Bool {
-        return name.count >= 3
+    private func viewDidLoad() {
+        viewState = .initial
     }
     
     func isEmailValid(_ email: String) -> Bool {
@@ -49,13 +49,12 @@ final class SignUpWithEmailViewModel: BaseViewModel<SignUpWithEmailContext.ViewE
         return password == confirmPassword
     }
     
-    func isFormValid(_ name: String,
-                     _ email: String,
-                     _ password: String,
-                     _ confirmPassword: String
+    func isFormValid(
+        _ email: String,
+        _ password: String,
+        _ confirmPassword: String
     ) -> Bool {
-        return isNameValid(name)
-            && isNameValid(email)
+        return isEmailValid(email)
             && isPasswordValid(password)
             && isConfirmPasswordValid(password, confirmPassword)
     }
@@ -67,8 +66,9 @@ final class SignUpWithEmailViewModel: BaseViewModel<SignUpWithEmailContext.ViewE
                 switch result {
                 case .success():
                     self?.outputEventSubject.send(.finish)
-                case .failure(_):
-                    break
+                case .failure(let error):
+                    print("ERROR \(error.localizedDescription)")
+                    self?.viewState = .error(.defaultUIError(from: error) ?? .init(alert: .init(message: error.localizedDescription)))
                 }
             }
             .store(in: &cancelableSet)

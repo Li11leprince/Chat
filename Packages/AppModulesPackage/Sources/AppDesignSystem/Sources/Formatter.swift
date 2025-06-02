@@ -16,7 +16,8 @@ extension Formatter {
      - Parameter phoneNumber: The phone number to be formatted.
     */
     public func formatPhoneNumber(_ phoneNumber: String?) -> String {
-        guard let phoneNumber = phoneNumber else { return "" }
+        guard let notFilteredNumber = phoneNumber else { return "" }
+        var phoneNumber = notFilteredNumber.filter { $0.isNumber }
 
         let firstPartSubstring = phoneNumber.prefix(3)
         let secondPartSubstring  = phoneNumber.dropFirst(3).prefix(3)

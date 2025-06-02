@@ -45,6 +45,7 @@
 "sign_in_invalid_email" = "Invalid email address";
 "sign_in_invalid_password" = "Min lenght is %@ symbols. Should use [0-9], [A-Z], [!@#$%^&*(),.?\":{}|<>]";
 "sign_in_invalid_confirm_password" = "Passwords are not equal";
+"sign_in_invalid_phone" = "Phone number is incorrect";
 "sign_in_login_to_chatbox" = "Log in to Chatbox";
 "sign_in_welcome_back" = "Welcome back! Sign in using your social account or email to continue us";
 "sign_in_login" = "Log in";

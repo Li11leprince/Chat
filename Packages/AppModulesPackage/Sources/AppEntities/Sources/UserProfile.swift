@@ -9,8 +9,8 @@ public struct UserProfile: Codable, Hashable {
     public let firstName: String
     public let lastName: String
     public let displayName: String
-    public let bio: String
-    public let birthday: Double
+    public let bio: String?
+    public let birthday: Double?
     public let avatar: String?
 
     public init(
@@ -19,8 +19,8 @@ public struct UserProfile: Codable, Hashable {
         firstName: String,
         lastName: String,
         displayName: String,
-        bio: String,
-        birthday: Double,
+        bio: String?,
+        birthday: Double?,
         avatar: String?
     ) {
         self.id = id

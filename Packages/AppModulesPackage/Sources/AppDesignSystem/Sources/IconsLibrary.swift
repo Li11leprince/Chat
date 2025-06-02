@@ -45,6 +45,12 @@ extension IconsLibrary {
     public var chatBackgroundDark: UIImage { valueOrStub("chat_background_dark") }
 }
 
+// MARK: - Images
+
+extension IconsLibrary {
+    public var addAvatar: UIImage { valueOrStub("add_avatar")}
+}
+
 // SFSymbols Example
 
 extension IconsLibrary {

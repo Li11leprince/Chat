@@ -6,33 +6,24 @@ import Combine
 import AppBaseFlow
 import FirebaseFirestore
 
-final class AccountRepository {
+public final class AccountRepository {
 
-    typealias FetchProfileResult = Result<UserProfile, AppError>
+    public typealias FetchProfileResult = Result<UserProfile, AppError>
 //    typealias UploadAvatarResult = Result<Image, AppError>
-    typealias VoidResult = Result<Void, AppError>
+    public typealias VoidResult = Result<Void, AppError>
 
-    private let httpClient: AlamofireHttpClient
-    private let requestFactory: HttpRequestFactory
     private let accountHolder: AccountHolder
-    private let networkMapper: NetworkMapper
     private let firestore: Firestore
 
     init(
-        httpClient: AlamofireHttpClient,
-        requestFactory: HttpRequestFactory,
         accountHolder: AccountHolder,
-        networkMapper: NetworkMapper,
         firestore: Firestore = .firestore()
     ) {
-        self.httpClient = httpClient
-        self.requestFactory = requestFactory
         self.accountHolder = accountHolder
-        self.networkMapper = networkMapper
         self.firestore = firestore
     }
 
-    func fetchProfile() -> AnyPublisher<FetchProfileResult, Never> {
+    public func fetchProfile() -> AnyPublisher<FetchProfileResult, Never> {
         guard let userId = accountHolder.account?.profile.id else {
             return Just(.failure(.unexpected)).eraseToAnyPublisher()
         }
@@ -51,7 +42,7 @@ final class AccountRepository {
         return publisher.eraseToAnyPublisher()
     }
     
-    func updateProfile(
+    public func updateProfile(
         profile: UserProfile
     ) -> AnyPublisher<VoidResult, Never> {
         let publisher = Future<VoidResult, Never> { [weak self] promise in

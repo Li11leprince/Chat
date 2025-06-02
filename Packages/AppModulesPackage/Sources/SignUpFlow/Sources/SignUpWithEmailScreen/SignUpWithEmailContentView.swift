@@ -53,7 +53,11 @@ extension SignUpWithEmailContext {
         }()
         
         private(set) lazy var verticalStackView: UIStackView = {
-            let stackView = UIStackView(arrangedSubviews: [nameTextField, emailTextField, passwordTextField, confirmPasswordTextField])
+            let stackView = UIStackView(arrangedSubviews: [
+                emailTextField,
+                passwordTextField,
+                confirmPasswordTextField
+            ])
             stackView.axis = .vertical
             stackView.spacing = 60
             return stackView
