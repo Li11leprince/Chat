@@ -9,8 +9,13 @@ import Combine
 class TextMessageCell: BaseCollectionViewCell {
     
     var onReply: ((MessageCellModel?) -> Void)?
+    var onReaction: (() -> Void)?
+
+    let feedbackGenerator = UIImpactFeedbackGenerator(style: .medium)
     
     private var isFeedbackHappened = false
+    private var reactionsCancellable: AnyCancellable?
+    private var isReacted = false
     
     private(set) lazy var bubbleView: UIView = {
         let view = UIView()
@@ -38,6 +43,10 @@ class TextMessageCell: BaseCollectionViewCell {
         return RepliedMessageView()
     }()
     
+    private(set) lazy var reactionsView: ReactionsView = {
+        return ReactionsView()
+    }()
+    
     //    private lazy var isReadImageView: UIImageView = {
     //        let im = UIImageView()
     //        im.image =
@@ -53,7 +62,9 @@ class TextMessageCell: BaseCollectionViewCell {
     override init(frame: CGRect) {
         super.init(frame: frame)
         setupLayout()
-        setupGesture()
+        setupPanGesture()
+        setupDoubleTapGesture()
+        setupReactionsObservers()
     }
     
     required init?(coder: NSCoder) {
@@ -97,6 +108,7 @@ class TextMessageCell: BaseCollectionViewCell {
     }
     
     private func layoutMessageInfo() {
+        guard reactionsView.reactions.value.isEmpty else { return }
         let padding: CGFloat = 8
         let maxTextWidth = maxBubbleWidth - padding * 2
         
@@ -118,8 +130,9 @@ class TextMessageCell: BaseCollectionViewCell {
     private func layoutMessageInfoInOneLineWithText(_ padding: CGFloat) {
         messageLabel.snp.remakeConstraints { make in
             make.top.equalToSuperview().inset(padding).priority(.low)
-            make.leading.bottom.equalToSuperview().inset(padding)
+            make.leading.equalToSuperview().inset(padding)
             make.trailing.equalTo(timeLabel.snp.leading).inset(-4)
+            make.bottom.equalToSuperview().inset(padding).priority(.low)
         }
         
         timeLabel.snp.remakeConstraints { make in
@@ -134,7 +147,7 @@ class TextMessageCell: BaseCollectionViewCell {
             make.leading.trailing.equalToSuperview().inset(padding)
         }
         timeLabel.snp.remakeConstraints { make in
-            make.top.equalTo(messageLabel.snp.bottom).inset(-2)
+            make.top.greaterThanOrEqualTo(messageLabel.snp.bottom).inset(-2)
             make.bottom.equalToSuperview().inset(4)
             make.trailing.equalTo(bubbleView.snp.trailing).inset(padding)
         }
@@ -188,13 +201,71 @@ class TextMessageCell: BaseCollectionViewCell {
             make.bottom.equalTo(messageLabel.snp.top).inset(-8)
         }
     }
+    
+    private func setupReactionsObservers() {
+        reactionsCancellable = reactionsView.reactions
+            .sink { [weak self] reactions in
+                guard let self else { return }
+                switch reactions.count {
+                case 0:
+                    self.hideReactionsView()
+                default:
+                    self.showReactionsView()
+                }
+            }
+    }
+    
+    private func showReactionsView() {
+        guard reactionsView.superview == nil else {
+            return
+        }
+        bubbleView.addSubview(reactionsView)
+        reactionsView.snp.makeConstraints { make in
+            make.leading.equalToSuperview().inset(8)
+            make.bottom.equalToSuperview().inset(8)
+            make.trailing.lessThanOrEqualTo(timeLabel.snp.leading).inset(-8)
+            make.top.equalTo(messageLabel.snp.bottom).inset(-8)
+        }
+        layoutMessageInfoUnderText(8)
+        UIView.animate(withDuration: 0.15) {
+            self.layoutIfNeeded()
+        }
+        onReaction?()
+        feedbackGenerator.impactOccurred()
+    }
+    
+    private func hideReactionsView() {
+        guard reactionsView.superview != nil else {
+            return
+        }
+        reactionsView.snp.remakeConstraints { make in
+            make.leading.equalToSuperview().inset(8)
+            make.trailing.lessThanOrEqualTo(timeLabel.snp.leading).inset(-8)
+            make.top.equalTo(messageLabel.snp.bottom).inset(-8)
+            make.height.equalTo(0)
+        }
+        layoutMessageInfo()
+        UIView.animate(withDuration: 0.15) {
+            self.layoutIfNeeded()
+        } completion: { _ in
+            self.reactionsView.removeFromSuperview()
+            self.reactionsView.snp.removeConstraints()
+        }
+        onReaction?()
+    }
 }
 
 extension TextMessageCell {
-    private func setupGesture() {
+    private func setupPanGesture() {
         let panGesture = UIPanGestureRecognizer(target: self, action: #selector(handlePan(_:)))
         panGesture.delegate = self
         contentView.addGestureRecognizer(panGesture)
+    }
+    
+    private func setupDoubleTapGesture() {
+        let gesture = UITapGestureRecognizer(target: self, action: #selector(handleDoubleTapGesture))
+        gesture.numberOfTapsRequired = 2
+        contentView.addGestureRecognizer(gesture)
     }
     
     @objc private func handlePan(_ gesture: UIPanGestureRecognizer) {
@@ -211,7 +282,6 @@ extension TextMessageCell {
             let shouldTriggerAction = contentView.frame.origin.x <= criticalPoint || velocity.x < -500
             if shouldTriggerAction && isFeedbackHappened == false {
                 isFeedbackHappened = true
-                let feedbackGenerator = UIImpactFeedbackGenerator(style: .medium)
                 feedbackGenerator.impactOccurred()
             }
         case .ended, .cancelled:
@@ -230,6 +300,20 @@ extension TextMessageCell {
             
         default:
             break
+        }
+    }
+    
+    @objc private func handleDoubleTapGesture() {
+        if isReacted {
+            isReacted = false
+            reactionsView.reactions.value = []
+        } else {
+            reactionsView.reactions.send(
+                [
+                    .init(emoji: "❤️", from: icons.mockAvatar)
+                ]
+            )
+            isReacted = true
         }
     }
 }

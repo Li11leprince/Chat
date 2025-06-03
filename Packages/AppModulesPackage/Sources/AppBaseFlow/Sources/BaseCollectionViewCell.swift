@@ -11,6 +11,7 @@ open class BaseCollectionViewCell: UICollectionViewCell {
     public let colors = appDesignSystem.colors
     public let strings = appDesignSystem.strings
     public let typography = appDesignSystem.typography
+    public let icons = appDesignSystem.icons
     
     public static var reuseIdentifier: String {
         return String(describing: Self.self)

@@ -64,6 +64,12 @@ extension ChatViewController: CollectionViewAdaptable, UICollectionViewDelegateF
             self?.bottomView.showReplyToView(text: model.text, person: model.from.displayName)
             self?.viewModel.onViewEvent(.replyTo(.plainText(model)))
         }
+        cell.onReaction = { [weak self] in
+            guard let self else { return }
+            UIView.animate(withDuration: 0.15) {
+                self.collectionView.performBatchUpdates(nil)
+            }
+        }
         return cell
     }
     
