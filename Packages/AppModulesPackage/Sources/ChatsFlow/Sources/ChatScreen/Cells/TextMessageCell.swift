@@ -10,6 +10,8 @@ class TextMessageCell: BaseCollectionViewCell {
     
     var onReply: ((MessageCellModel?) -> Void)?
     var onReaction: (() -> Void)?
+    
+    let maxBubbleWidth: CGFloat = UIScreen.main.bounds.width * 0.7
 
     let feedbackGenerator = UIImpactFeedbackGenerator(style: .medium)
     
@@ -55,8 +57,6 @@ class TextMessageCell: BaseCollectionViewCell {
     
     private var cancellableSet: Set<AnyCancellable> = []
     
-    private let maxBubbleWidth: CGFloat = UIScreen.main.bounds.width * 0.7
-    
     private var model: MessageCellModel?
     
     override init(frame: CGRect) {
@@ -77,7 +77,7 @@ class TextMessageCell: BaseCollectionViewCell {
     }
     
     
-    private func setupLayout() {
+    func setupLayout() {
         setupHierarchy()
         setupConstraints()
     }
@@ -166,8 +166,8 @@ class TextMessageCell: BaseCollectionViewCell {
     
     // MARK: - Конфигурация ячейки
     
-    func configure(model: TextMessageCellModel) {
-        self.model = .plainText(model)
+    func configure(model: MessageCellModel) {
+        self.model = model
         messageLabel.text = model.text
         timeLabel.text = model.time
         

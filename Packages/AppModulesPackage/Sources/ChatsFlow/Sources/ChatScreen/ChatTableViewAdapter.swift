@@ -8,13 +8,16 @@ extension ChatViewController: CollectionViewAdaptable, UICollectionViewDelegateF
     
     func registerCells(in collectionView: UICollectionView) {
         collectionView.register(TextMessageCell.self)
+        collectionView.register(CircleVideoCell.self)
     }
     
     func setDataSource(in collectionView: UICollectionView) {
         dataSource = UICollectionViewDiffableDataSource<Section, Item>(collectionView: collectionView) { collectionView, indexPath, message in
-            switch message {
-            case .plainText(let model):
-                return self.bindTextCell(collectionView, indexPath, model)
+            switch message.messageType {
+            case .plainText:
+                return self.bindTextCell(collectionView, indexPath, message)
+            case .circleVideo(_):
+                return self.bindCircleVideoCell(collectionView, indexPath, message)
             }
         }
         
@@ -55,14 +58,35 @@ extension ChatViewController: CollectionViewAdaptable, UICollectionViewDelegateF
     private func bindTextCell(
         _ collectionView: UICollectionView,
         _ indexPath: IndexPath,
-        _ model: TextMessageCellModel
+        _ model: MessageCellModel
     ) -> TextMessageCell {
         let cell = collectionView.dequeue(TextMessageCell.self, indexPath: indexPath)
         cell.configure(model: model)
         cell.onReply = { [weak self] model in
-            guard case .plainText(let model) = model else { return }
+            guard let model else { return }
             self?.bottomView.showReplyToView(text: model.text, person: model.from.displayName)
-            self?.viewModel.onViewEvent(.replyTo(.plainText(model)))
+            self?.viewModel.onViewEvent(.replyTo(model))
+        }
+        cell.onReaction = { [weak self] in
+            guard let self else { return }
+            UIView.animate(withDuration: 0.15) {
+                self.collectionView.performBatchUpdates(nil)
+            }
+        }
+        return cell
+    }
+    
+    private func bindCircleVideoCell(
+        _ collectionView: UICollectionView,
+        _ indexPath: IndexPath,
+        _ model: MessageCellModel
+    ) -> TextMessageCell {
+        let cell = collectionView.dequeue(CircleVideoCell.self, indexPath: indexPath)
+        cell.configure(model: model)
+        cell.onReply = { [weak self] model in
+            guard let model else { return }
+            self?.bottomView.showReplyToView(text: model.text, person: model.from.displayName)
+            self?.viewModel.onViewEvent(.replyTo(model))
         }
         cell.onReaction = { [weak self] in
             guard let self else { return }

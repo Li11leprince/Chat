@@ -14,6 +14,7 @@ final class ChatViewController: BaseViewController<ChatViewModel,
     var bottomView: BottomView { contentView.bottomView }
     
     private typealias Paddings = ChatContext.ContentView.Paddings
+    private var videoPreviewView: CircularVideoPreviewView?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -55,22 +56,62 @@ final class ChatViewController: BaseViewController<ChatViewModel,
                 self.textViewDidChange(bottomView.messageTextView)
             }
             .store(in: &cancelableSet)
+            
+        bottomView.videoRecordButton.touchUpInsidePublisher
+            .sink { [weak self] in
+                self?.showVideoPreview()
+            }
+            .store(in: &cancelableSet)
+            
         bottomView.replyToView.closeButton.touchUpInsidePublisher
             .sink { [weak self] in
                 self?.bottomView.hideReplyToView()
                 self?.viewModel.onViewEvent(.replyTo(nil))
             }
             .store(in: &cancelableSet)
+            
         NotificationCenter.default.publisher(for: UIResponder.keyboardWillShowNotification)
             .sink { [weak self] info in
                 self?.keyboardWillShow(notification: info)
             }
             .store(in: &cancelableSet)
+            
         NotificationCenter.default.publisher(for: UIResponder.keyboardWillHideNotification)
             .sink { [weak self] info in
                 self?.keyboardWillHide()
             }
             .store(in: &cancelableSet)
+    }
+    
+    private func showVideoPreview() {
+        let videoPreviewView = CircularVideoPreviewView(videoRecordingManager: viewModel.videoRecordingManager)
+        videoPreviewView.frame = view.bounds
+        videoPreviewView.onClose = { [weak self] in
+            self?.hideVideoPreview()
+        }
+        view.addSubview(videoPreviewView)
+        self.videoPreviewView = videoPreviewView
+        
+        videoPreviewView.alpha = 0
+        UIView.animate(withDuration: 0.3) {
+            videoPreviewView.alpha = 1
+        }
+        
+        viewModel.onViewEvent(.startVideoRecording)
+        videoPreviewView.startSession()
+    }
+    
+    private func hideVideoPreview() {
+        guard let videoPreviewView = videoPreviewView else { return }
+        videoPreviewView.stopSession()
+        viewModel.onViewEvent(.stopVideoRecording)
+        
+        UIView.animate(withDuration: 0.3) {
+            videoPreviewView.alpha = 0
+        } completion: { _ in
+            videoPreviewView.removeFromSuperview()
+            self.videoPreviewView = nil
+        }
     }
     
     private func keyboardWillShow(notification: Notification) {

@@ -56,13 +56,18 @@ public struct Reaction: Hashable {
 public struct Attachment: Hashable {
     public let type: AttachmentType
     public let url: URL
+    
+    public init(type: AttachmentType, url: URL) {
+        self.type = type
+        self.url = url
+    }
 }
 
 public enum MessageType: Hashable {
     case plainText
     case textWithImageAndVideo
-    case audioMessage
-    case videoMessage
+    case audio
+    case video
 }
 
 public enum AttachmentType: Hashable {

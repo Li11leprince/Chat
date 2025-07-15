@@ -4,11 +4,12 @@ import Foundation
 import AppEntities
 
 
-enum MessageCellModel: Hashable {
-    case plainText(TextMessageCellModel)
+enum MessageType: Hashable {
+    case plainText
+    case circleVideo(VideoMessageModel)
 }
 
-struct TextMessageCellModel: Hashable {
+struct MessageCellModel: Hashable {
     let isMe: Bool
     let id: String
     let time: String
@@ -18,11 +19,12 @@ struct TextMessageCellModel: Hashable {
     let reactions: [Reaction]
     let isChanged: Bool
     let replyTo: RepliedMessage?
+    let messageType: MessageType
     
-    static var mock: [TextMessageCellModel] = {
-        var data: [TextMessageCellModel] = []
+    static var mock: [MessageCellModel] = {
+        var data: [MessageCellModel] = []
         for i in 0...10 {
-            data.append(TextMessageCellModel(
+            data.append(MessageCellModel(
                 isMe: true,
                 id: String(i),
                 time: "12:05",
@@ -31,7 +33,8 @@ struct TextMessageCellModel: Hashable {
                 isRead: true,
                 reactions: [],
                 isChanged: false,
-                replyTo: nil
+                replyTo: nil,
+                messageType: .plainText
             ))
         }
         return data
@@ -41,4 +44,10 @@ struct TextMessageCellModel: Hashable {
 struct UserModel: Hashable {
     let id: String
     let name: String
+}
+
+struct VideoMessageModel: Hashable {
+    let videoURL: URL
+    let thumbnailURL: URL?
+    let duration: String
 }

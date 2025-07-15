@@ -12,6 +12,7 @@ open class BaseCollectionViewCell: UICollectionViewCell {
     public let strings = appDesignSystem.strings
     public let typography = appDesignSystem.typography
     public let icons = appDesignSystem.icons
+    public let formatter = appDesignSystem.formatter
     
     public static var reuseIdentifier: String {
         return String(describing: Self.self)

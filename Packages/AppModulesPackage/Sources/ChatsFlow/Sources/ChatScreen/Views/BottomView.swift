@@ -30,6 +30,14 @@ final class BottomView: BaseView {
         return btn
     }()
     
+    private(set) lazy var videoRecordButton: ActionButton = {
+        let btn = ActionButton()
+        btn.setImage(UIImage(systemName: "video.circle.fill"), for: .normal)
+        btn.imageView?.contentMode = .scaleAspectFit
+        btn.tintColor = .systemBlue
+        return btn
+    }()
+    
     private(set) lazy var replyToView: ReplyToView = {
         let view = ReplyToView()
         view.clipsToBounds = true
@@ -87,6 +95,7 @@ final class BottomView: BaseView {
         addSubview(replyToView)
         addSubview(messageTextView)
         addSubview(sendMessageButton)
+        addSubview(videoRecordButton)
     }
     
     private func setupConstraints() {
@@ -105,6 +114,12 @@ final class BottomView: BaseView {
             make.leading.trailing.equalToSuperview().inset(40)
             make.bottom.equalToSuperview().inset(Paddings.messageTextViewBottomInsentWhenKeyBoardClosed)
             make.height.equalTo(Paddings.messageTextViewHeight)
+        }
+        
+        videoRecordButton.snp.makeConstraints { make in
+            make.bottom.equalTo(messageTextView.snp.bottom)
+            make.trailing.equalTo(messageTextView.snp.leading).inset(-4)
+            make.width.height.equalTo(30)
         }
         
         sendMessageButton.snp.makeConstraints { make in

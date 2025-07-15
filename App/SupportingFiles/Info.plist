@@ -28,8 +28,12 @@
 	<false/>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
+	<key>NSCameraUsageDescription</key>
+	<string>Camera access is required to record video messages</string>
 	<key>NSContactsUsageDescription</key>
 	<string>App would Like to Access Your Contacts</string>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>Mic access is required to record video messages</string>
 	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>
 	<key>UILaunchStoryboardName</key>

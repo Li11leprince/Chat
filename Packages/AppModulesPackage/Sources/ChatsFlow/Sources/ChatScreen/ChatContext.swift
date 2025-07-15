@@ -25,6 +25,8 @@ extension ChatContext {
         case viewDidLoad
         case messageButtonClicked(String)
         case replyTo(MessageCellModel?)
+        case startVideoRecording
+        case stopVideoRecording
     }
 }
 
